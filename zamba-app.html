@@ -429,7 +429,7 @@ const LK_SRC="https://cdn.jsdelivr.net/npm/livekit-client@2.5.7/dist/livekit-cli
 let liveRoom=null,liveDir=null,liveDirReady=null,liveLives={},liveHostId=null;
 function loadLK(){return new Promise((ok,no)=>{if(window.LivekitClient)return ok();const s=document.createElement("script");s.src=LK_SRC;s.onload=ok;s.onerror=()=>no(new Error("Não foi possível carregar o LiveKit. Verifica a internet."));document.head.appendChild(s)})}
 async function liveToken(room,host){
- const{data,error}=await sb.functions.invoke("livekit-token",{body:{room,host}});
+ const{data,error}=await sb.functions.invoke("smooth-responder",{body:{room,host}});
  if(error){let m=error.message;try{const j=await error.context.json();m=j.error||m}catch(e){}throw new Error(m)}
  if(data?.error)throw new Error(data.error);
  if(!data?.token||!data?.url)throw new Error("Resposta inválida do servidor de Live.");
@@ -488,7 +488,7 @@ async function liveStartHost(){
  try{
   liveStatus("A ligar…");
   await loadLK();const L=window.LivekitClient;
-  st="2/4 pedir acesso ao servidor (função livekit-token)";
+  st="2/4 pedir acesso ao servidor (função smooth-responder)";
   const{token,url}=await liveToken("zamba-"+me.id,true);
   st="3/4 ligar ao LiveKit";
   const room=new L.Room({adaptiveStream:true,dynacast:true});
@@ -510,7 +510,7 @@ async function liveStartHost(){
   if(liveRoom){try{await liveRoom.disconnect()}catch(e){}liveRoom=null}
   const raw=String(err?.message||err);let dica="";
   if(st.startsWith("1"))dica="Sem internet ou o carregamento do LiveKit foi bloqueado.";
-  else if(st.startsWith("2"))dica=/Edge Function|Failed to send|fetch/i.test(raw)?"A função livekit-token não respondeu. Confirma no Supabase que está publicada e tem os 3 segredos (LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET).":"";
+  else if(st.startsWith("2"))dica=/Edge Function|Failed to send|fetch/i.test(raw)?"A função smooth-responder não respondeu. Confirma no Supabase que está publicada e tem os 3 segredos (LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET).":"";
   else if(st.startsWith("3"))dica="O segredo LIVEKIT_URL deve começar por wss:// e ser o endereço do teu projeto LiveKit.";
   else if(st.startsWith("4"))dica="Permite a câmara e o microfone: toca no cadeado ao lado do endereço do site e ativa as permissões.";
   liveStatus("Não foi possível começar.");
