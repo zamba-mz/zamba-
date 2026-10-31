@@ -46,7 +46,7 @@ video,audio,img.m{width:100%;border-radius:12px;margin:8px 0}.auth{max-width:440
 .live-studio video{width:100%;max-height:52vh;aspect-ratio:16/9;object-fit:cover;background:#000;border-radius:14px}
 .live-chat{height:190px;overflow:auto;background:#100b20;border:1px solid var(--ln);border-radius:12px;padding:10px;margin:8px 0}
 .live-chat p{margin:5px 0;overflow-wrap:anywhere}
-.live-state{padding:8px 12px;border-radius:20px;background:#2a2144;color:#d8ccff;font-size:12px}.live-heart{position:absolute;bottom:0;font-size:26px;color:#ff4d6d;animation:lhf 2s ease-out forwards}@keyframes lhf{to{transform:translateY(-220px);opacity:0}}
+.live-state{padding:8px 12px;border-radius:20px;background:#2a2144;color:#d8ccff;font-size:12px}.lv{position:fixed;inset:0;z-index:80;background:#000;color:#fff;overflow:hidden;height:100vh;height:100dvh}.lv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;border-radius:0;margin:0}.lv-top{position:absolute;top:0;left:0;right:0;z-index:4;display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 12px 30px;background:linear-gradient(#000c,transparent)}.lv-av{flex:none;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--a));display:grid;place-items:center;font-weight:900}.lv-t{min-width:0;flex:1}.lv-t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lv-t small{color:#ddd}.lv-pill{background:#0009;border-radius:20px;padding:7px 11px;font-size:13px;font-weight:800;white-space:nowrap}.lv-x{background:#0009!important;border-radius:50%!important;width:40px;height:40px;padding:0!important;flex:none}.lv-wait{position:absolute;top:42%;left:50%;transform:translateX(-50%);z-index:4;background:#000a;padding:10px 18px;border-radius:24px;font-weight:700;text-align:center}.lv-err{position:absolute;left:12px;right:12px;top:90px;z-index:9;background:#2a0f1aee;border:1px solid #e5485d;border-radius:14px;padding:12px;white-space:pre-wrap;font-size:14px}.lv-setup{position:absolute;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:6;background:#1a1430ee;border:1px solid var(--ln);border-radius:18px;padding:14px;display:grid;gap:10px}.lv-setup input,.lv-setup select{margin:0}.lv-chat{position:absolute;left:10px;right:72px;bottom:calc(76px + env(safe-area-inset-bottom));max-height:34vh;overflow-y:auto;z-index:3;display:flex;flex-direction:column;gap:4px}.lv-chat p{margin:0;background:#0008;padding:6px 11px;border-radius:14px;align-self:flex-start;max-width:100%;overflow-wrap:anywhere;font-size:14px}.lv-chat p.j{background:#7c5cff99;font-size:12px}.lv-chat p.g{background:linear-gradient(90deg,#ff7a59cc,#7c5cffcc)}.lv-side{position:absolute;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:5;display:flex;flex-direction:column;gap:10px}.lv-side button{width:48px;height:48px;border-radius:50%;padding:0;font-size:21px;background:#000a;border:1px solid #fff3}.lv-bar{position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;gap:8px;padding:12px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#000c)}.lv-bar input{flex:1;margin:0;background:#000a;border:1px solid #fff4;border-radius:24px;color:#fff}.lv-bar button{border-radius:24px;padding:0 18px}.lv-hearts{position:absolute;right:0;bottom:calc(150px + env(safe-area-inset-bottom));top:30%;width:110px;z-index:6;pointer-events:none;overflow:hidden}.lv-gfx{position:absolute;left:10px;top:24%;z-index:7;display:flex;flex-direction:column;gap:8px;pointer-events:none}.lv-gift{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#ff7a59ee,#7c5cffee);padding:8px 18px 8px 10px;border-radius:30px;animation:lvin .4s both;font-weight:800}.lv-gift span{font-size:34px}@keyframes lvin{from{transform:translateX(-120%);opacity:0}}.lv-big{position:absolute;left:50%;bottom:30%;font-size:96px;z-index:7;pointer-events:none;animation:lvbig 2.4s ease-out forwards}@keyframes lvbig{0%{transform:translate(-50%,40px) scale(.3);opacity:0}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{transform:translate(-50%,-170px) scale(1.4);opacity:0}}.lv-sheet{position:absolute;left:0;right:0;bottom:0;z-index:10;background:var(--p);border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:62vh;overflow:auto;border-top:1px solid var(--ln)}.lv-gg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}.lv-gg button{padding:12px 6px}.live-strip{margin:8px 0 12px;padding:12px;border-radius:18px;background:linear-gradient(135deg,#2a1450,#3b1747);border:1px solid #7651a8}.live-chip{flex:none;width:92px;text-align:center;cursor:pointer}.live-chip b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.live-chip small{display:block;color:var(--mu);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.live-ring{width:62px;height:62px;margin:0 auto 4px;border-radius:50%;display:grid;place-items:center;font-size:24px;font-weight:900;background:var(--p2);border:3px solid #e5485d;box-shadow:0 0 0 2px #e5485d55;animation:lvp 1.6s infinite}@keyframes lvp{50%{box-shadow:0 0 0 6px #e5485d11}}.live-nav.live-on{background:#e5485d!important;color:#fff!important;animation:lvp 1.6s infinite}.live-heart{position:absolute;bottom:0;font-size:26px;color:#ff4d6d;animation:lhf 2s ease-out forwards}@keyframes lhf{to{transform:translateY(-220px);opacity:0}}
 </style></head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
@@ -154,7 +154,7 @@ function welcomeProfile(){let d=$("#md");if(!d){d=document.createElement("div");
 // ZAMBA NEXT: camada de experiência Live e navegação profissional (interface demonstrativa)
 V.live=function(){ensureDir();return `<div class="live-hero"><div class="row"><span class="live-tag">● ZAMBA LIVE</span><span class="mu">ESTÚDIO DE TRANSMISSÃO</span></div><h1>O teu palco. O teu público.</h1><p>Transmite em direto para a comunidade ZAMBA, com chat e corações em tempo real.</p><button data-lv="start">● Iniciar uma Live</button><button class="g" data-lv="schedule">◷ Preparar agendamento</button></div>
 <div class="live-tools"><div class="live-tool"><b>🎁 Presentes</b><span class="mu">Sistema Zamba Coins ligado ao livro de movimentos existente</span></div><div class="live-tool"><b>🎙️ Câmara e microfone</b><span class="mu">Transmissão em direto a partir do teu dispositivo</span></div><div class="live-tool"><b>🛡️ Segurança</b><span class="mu">Acesso à Live controlado por token seguro no servidor</span></div></div>
-<div class="box"><h3 style="margin-top:0">🔴 Ao vivo agora</h3><div id="liveNow">${liveNowHtml()}</div></div>
+<div class="box"><h3 style="margin-top:0">🔴 Ao vivo agora</h3><div id="liveNow">${liveNowHtml()}</div><div class="mu" id="liveDiag" style="margin-top:10px;font-size:11px">${liveDiagTxt()}</div></div>
 <div class="box"><h3 style="margin-top:0">Como funciona</h3><div class="live-steps"><div>01 <b>Preparar a sala</b><span class="mu">Título, categoria e permissões</span></div><div>02 <b>Testar equipamento</b><span class="mu">Câmara e microfone do dispositivo</span></div><div>03 <b>Transmitir para o público</b><span class="mu">Os espectadores veem-te em direto e podem escrever no chat</span></div></div><button data-lv="start" style="width:100%;margin-top:12px">Iniciar uma Live</button></div>
 <div class="box"><h3 style="margin-top:0">Presentes e carteira</h3><p class="mu">Os presentes usam o saldo de Zamba Coins disponível na conta. As moedas atuais continuam identificadas como saldo de demonstração até existir uma compra real e regras de conversão/levantamento aprovadas.</p><button class="g" data-t="profile" style="width:100%">Abrir perfil e saldo de Coins</button></div>
 <div class="note">Live ligada ao LiveKit: o anfitrião transmite vídeo e áudio; quem entra assiste e participa no chat e nos corações. A Live só dura enquanto o anfitrião estiver com a página aberta.</div>`};
@@ -424,9 +424,10 @@ d.innerHTML=`<div class="box"><div class="row"><b>🔔 Notificações</b><button
   let d=$("#md");if(!d){d=document.createElement("div");d.id="md";document.body.appendChild(d)}const im=s.mime?.startsWith("image");
   d.innerHTML=`<div class="box"><div class="row"><span class="row" style="flex-wrap:nowrap">${av(s.profiles,32,s.author_id)}<b>${esc(s.profiles?.name||"")}</b></span><button class="g" data-a="x">✕</button></div><div style="position:relative">${im?`<img class="m" src="${esc(s.media_path)}" style="margin:8px 0 0">`:`<video autoplay controls playsinline src="${esc(s.media_path)}" style="margin:8px 0 0"></video>`}${s.caption?`<div style="position:absolute;left:0;right:0;bottom:16%;text-align:center;padding:8px 14px;background:#000a;font-size:20px;font-weight:800">${esc(s.caption)}</div>`:""}</div><div class="row"><button class="${mine?"":"g"}" data-a="stl" data-i="${i}">❤ ${(lks.data||[]).length}</button><span class="mu">💬 ${(cms.data||[]).length}</span></div><h3>Comentários</h3>${cl}<div class="row" style="flex-wrap:nowrap"><input id="sc" placeholder="Escreve um comentário…" maxlength="300"><button data-a="stc" data-i="${i}">Enviar</button></div></div>`}
  }catch(e){toast(e.message||"Não foi possível concluir.")}}
-/* ===== ZAMBA LIVE com LiveKit ===== */
+/* ===== ZAMBA LIVE PRO (LiveKit) ===== */
 const LK_SRC="https://cdn.jsdelivr.net/npm/livekit-client@2.5.7/dist/livekit-client.umd.js";
-let liveRoom=null,liveDir=null,liveDirReady=null,liveLives={},liveHostId=null;
+const LIVE_GIFTS=[{id:"rosa",e:"🌹",n:"Rosa",c:1},{id:"cafe",e:"☕",n:"Café",c:5},{id:"amor",e:"💖",n:"Amor",c:10},{id:"coroa",e:"👑",n:"Coroa",c:50},{id:"foguete",e:"🚀",n:"Foguete",c:100},{id:"leao",e:"🦁",n:"Leão",c:200}];
+let liveRoom=null,liveDir=null,liveDirReady=null,liveDirFor=null,liveDirState="a ligar…",liveLives={},liveHostId=null,liveMedia=null,liveRoster={},liveNames=[],liveFacing="user",liveMuted=false,liveHeartAt=0;
 function loadLK(){return new Promise((ok,no)=>{if(window.LivekitClient)return ok();const s=document.createElement("script");s.src=LK_SRC;s.onload=ok;s.onerror=()=>no(new Error("Não foi possível carregar o LiveKit. Verifica a internet."));document.head.appendChild(s)})}
 async function liveToken(room,host){
  const{data,error}=await sb.functions.invoke("smooth-responder",{body:{room,host}});
@@ -434,56 +435,116 @@ async function liveToken(room,host){
  if(data?.error)throw new Error(data.error);
  if(!data?.token||!data?.url)throw new Error("Resposta inválida do servidor de Live.");
  return data}
+/* ---------- descoberta de Lives (visível em toda a app) ---------- */
+const liveList=()=>Object.values(liveLives).filter(x=>x.host!==me?.id);
+function liveDiagTxt(){return"Canal de Lives: "+(liveDirState==="SUBSCRIBED"?"ligado ✓":liveDirState)}
 function liveNowHtml(){
- const l=Object.values(liveLives).filter(x=>x.host!==me?.id);
+ const l=liveList();
  if(!l.length)return`<div class="mu">Ninguém está ao vivo neste momento.</div>`;
  return`<div class="live-grid">${l.map(x=>`<div class="live-card"><div class="live-cover"><span class="live-tag" style="align-self:flex-start">● AO VIVO</span><div><strong>${esc(x.title||"Live")}</strong><br><small>${esc(x.name||"")} · ${esc(x.category||"")}</small></div></div><div style="padding:10px"><button data-lv="watch" data-host="${esc(x.host)}" style="width:100%">▶ Assistir</button></div></div>`).join("")}</div>`}
+function liveStripHtml(){
+ const l=liveList();if(!l.length)return"";
+ return`<div class="live-strip"><div class="row" style="margin-bottom:8px"><span class="live-tag">● AO VIVO</span><b>${l.length} Live${l.length>1?"s":""} agora</b></div><div class="chips" style="gap:12px">${l.map(x=>`<div class="live-chip" data-lv="watch" data-host="${esc(x.host)}"><div class="live-ring">${esc((x.name||"?").slice(0,1).toUpperCase())}</div><b>${esc(x.name||"")}</b><small>${esc(x.title||"")}</small></div>`).join("")}</div></div>`}
+function liveRefreshUI(){
+ try{
+  const el=document.getElementById("liveNow");if(el)el.innerHTML=liveNowHtml();
+  const dg=document.getElementById("liveDiag");if(dg)dg.textContent=liveDiagTxt();
+  let s=document.getElementById("liveStrip");
+  if(me&&tab==="feed"){const app=document.getElementById("app");if(app){if(!s){s=document.createElement("div");s.id="liveStrip";app.prepend(s)}s.innerHTML=liveStripHtml()}}
+  else if(s)s.remove();
+  const n=liveList().length;
+  document.querySelectorAll(".live-nav").forEach(b=>{b.classList.toggle("live-on",n>0);b.textContent="● LIVE"+(n?" · "+n:"")});
+ }catch(e){}}
 function ensureDir(){
- if(liveDirReady)return liveDirReady;
  if(!me||!sb)return Promise.resolve();
+ if(liveDirFor!==me.id){if(liveDir){try{sb.removeChannel(liveDir)}catch(e){}}liveDir=null;liveDirReady=null;liveLives={};liveDirFor=me.id}
+ if(liveDirReady)return liveDirReady;
  liveDirReady=new Promise(res=>{
   try{
-   liveDir=sb.channel("zamba-live-directory",{config:{presence:{key:me.id}}});
-   liveDir.on("presence",{event:"sync"},()=>{const st=liveDir.presenceState();liveLives={};for(const k in st){const m=(st[k]||[]).find(x=>x&&x.host);if(m)liveLives[k]=m}const el=document.getElementById("liveNow");if(el)el.innerHTML=liveNowHtml()});
-   liveDir.subscribe(s=>{if(s==="SUBSCRIBED")res()});
+   const ch=sb.channel("zamba-live-directory",{config:{presence:{key:me.id}}});liveDir=ch;
+   ch.on("presence",{event:"sync"},()=>{const st=ch.presenceState();liveLives={};for(const k in st){const m=(st[k]||[]).find(x=>x&&x.host);if(m)liveLives[k]=m}liveRefreshUI()});
+   ch.subscribe(s=>{liveDirState=s;if(s==="SUBSCRIBED")res();liveRefreshUI()});
    setTimeout(res,5000);
-  }catch(e){res()}});
+  }catch(e){liveDirState="erro: "+(e.message||e);res()}});
  return liveDirReady}
-function liveChatLine(user,body){const box=document.getElementById("liveChatLog");if(!box)return;const p=document.createElement("p");const b=document.createElement("b");b.textContent=(user||"Participante")+": ";p.append(b,document.createTextNode(body||""));box.appendChild(p);box.scrollTop=box.scrollHeight}
-function liveHeart(){const c=document.getElementById("liveHearts");if(!c)return;const h=document.createElement("span");h.className="live-heart";h.textContent="❤";h.style.right=(8+Math.random()*40)+"px";c.appendChild(h);setTimeout(()=>h.remove(),2000)}
-function liveSetCount(){const el=document.getElementById("liveCount");if(el&&liveRoom)el.textContent="👁 "+liveRoom.remoteParticipants.size}
-function liveErr(t){const e=document.getElementById("liveErr");if(!e)return;e.style.display=t?"block":"none";e.textContent=t||""}
-function liveStatus(t){const s=document.getElementById("liveStatus");if(s)s.textContent=t}
+{const _r=render;render=function(){const x=_r.apply(this,arguments);try{if(me){ensureDir();liveRefreshUI()}}catch(e){}return x}}
+/* ---------- utilitários de interface ---------- */
+const $l=id=>document.getElementById(id);
+function liveErr(t){const e=$l("liveErr");if(!e)return;e.style.display=t?"block":"none";e.textContent=t||""}
+function liveStatus(t){const e=$l("liveStatus");if(!e)return;e.textContent=t||"";e.style.display=t?"block":"none";if(t&&t[0]==="●")setTimeout(()=>{if(e.textContent===t)e.style.display="none"},2500)}
+function liveChatLine(user,body,cls){const box=$l("liveChatLog");if(!box)return;const p=document.createElement("p");if(cls)p.className=cls;if(user){const b=document.createElement("b");b.textContent=user+" ";p.append(b)}p.append(document.createTextNode(body||""));box.appendChild(p);while(box.children.length>60)box.firstChild.remove();box.scrollTop=box.scrollHeight}
+function liveHeart(){const c=$l("liveHearts");if(!c)return;const h=document.createElement("span");h.className="live-heart";h.textContent=["❤","💖","💜","🧡"][Math.floor(Math.random()*4)];h.style.right=(8+Math.random()*60)+"px";c.appendChild(h);setTimeout(()=>h.remove(),2000)}
+function liveGiftFx(m){
+ const g=LIVE_GIFTS.find(x=>x.id===m.g);if(!g)return;
+ const box=$l("liveGifts");
+ if(box){const d=document.createElement("div");d.className="lv-gift";const s=document.createElement("span");s.textContent=g.e;const t=document.createElement("div");const a=document.createElement("b");a.textContent=String(m.name||"Alguém").slice(0,40);const q=document.createElement("small");q.textContent="enviou "+g.n;q.style.display="block";t.append(a,q);d.append(s,t);box.appendChild(d);setTimeout(()=>d.remove(),4200)}
+ const st=$l("liveStudio");if(st){const b=document.createElement("div");b.className="lv-big";b.textContent=g.e;st.appendChild(b);setTimeout(()=>b.remove(),2500)}
+ liveChatLine("","🎁 "+String(m.name||"Alguém").slice(0,40)+" enviou "+g.e+" "+g.n,"g")}
+function liveSetCount(){const el=$l("liveCount");if(el&&liveRoom)el.textContent="👁 "+liveRoom.remoteParticipants.size}
 async function liveSend(obj){if(!liveRoom)return false;try{await liveRoom.localParticipant.publishData(new TextEncoder().encode(JSON.stringify(obj)),{reliable:true});return true}catch(e){return false}}
+function liveSheet(html){const s=$l("liveSheet");if(!s)return;s.innerHTML=html?`<div class="lv-sheet">${html}</div>`:""}
+function livePeopleHtml(){const L=liveNames;return`<div class="row"><b>👥 Quem está na Live (${liveRoom?liveRoom.remoteParticipants.size:0})</b><button class="g" data-lv="sheetx">✕</button></div>${L.length?L.map(n=>`<div style="padding:8px 0;border-top:1px solid var(--ln)">${esc(n)}</div>`).join(""):`<div class="mu" style="margin-top:8px">Ainda sem espectadores.</div>`}`}
+function liveGiftsHtml(){return`<div class="row"><b>🎁 Enviar presente</b><button class="g" data-lv="sheetx">✕</button></div><div class="mu" style="margin:6px 0">Saldo: <b id="liveCoins">${coins}</b> Zamba Coins (demonstração)</div><div class="lv-gg">${LIVE_GIFTS.map(g=>`<button class="g" data-lv="gift" data-g="${g.id}"><span style="font-size:30px;display:block">${g.e}</span>${g.n}<small style="display:block;color:var(--mu)">🪙 ${g.c}</small></button>`).join("")}</div>`}
+/* ---------- fecho ---------- */
 async function closeLiveStudio(){
  const r=liveRoom;liveRoom=null;
  if(r){try{await r.disconnect()}catch(e){}}
+ if(liveMedia){liveMedia.getTracks().forEach(t=>t.stop());liveMedia=null}
  if(liveDir&&liveHostId===me?.id){try{await liveDir.untrack()}catch(e){}}
- liveHostId=null;
+ liveHostId=null;liveRoster={};liveNames=[];liveMuted=false;
+ try{if(document.fullscreenElement)await document.exitFullscreen()}catch(e){}
  document.getElementById("liveStudio")?.remove()}
+/* ---------- eventos da sala ---------- */
+function liveBroadcastRoster(){liveNames=Object.values(liveRoster);liveSend({t:"roster",list:liveNames.slice(0,200)})}
 function liveBind(room,L,hostId){
- room.on(L.RoomEvent.DataReceived,(payload)=>{try{const m=JSON.parse(new TextDecoder().decode(payload));if(m.t==="chat")liveChatLine(m.name,String(m.body||"").slice(0,300));else if(m.t==="heart")liveHeart()}catch(e){}});
+ const iAmHost=hostId===me?.id;
+ room.on(L.RoomEvent.DataReceived,(payload,p)=>{try{
+  const m=JSON.parse(new TextDecoder().decode(payload));
+  if(m.t==="chat")liveChatLine(String(m.name||"Participante").slice(0,40),String(m.body||"").slice(0,300));
+  else if(m.t==="heart")liveHeart();
+  else if(m.t==="gift")liveGiftFx(m);
+  else if(m.t==="join"){const n=String(m.name||"Alguém").slice(0,40);liveChatLine("","👋 "+n+" entrou","j");if(iAmHost&&p){liveRoster[p.identity]=n;liveBroadcastRoster()}}
+  else if(m.t==="roster"&&!iAmHost&&Array.isArray(m.list))liveNames=m.list.map(x=>String(x).slice(0,40))
+ }catch(e){}});
  room.on(L.RoomEvent.ParticipantConnected,liveSetCount);
- room.on(L.RoomEvent.ParticipantDisconnected,p=>{liveSetCount();if(hostId!==me?.id&&p.identity===hostId){liveStatus("A Live terminou.");const v=document.getElementById("liveRemote");if(v)v.srcObject=null}});
- room.on(L.RoomEvent.TrackSubscribed,t=>{if(t.kind==="video"){const v=document.getElementById("liveRemote");if(v)t.attach(v);liveStatus("● Ao vivo")}else if(t.kind==="audio"){const a=document.getElementById("liveAudio");if(a)t.attach(a);try{room.startAudio()}catch(e){}}});
+ room.on(L.RoomEvent.ParticipantDisconnected,p=>{liveSetCount();if(iAmHost){delete liveRoster[p.identity];liveBroadcastRoster()}else if(p.identity===hostId){liveStatus("A Live terminou.");const v=$l("liveRemote");if(v)v.srcObject=null}});
+ room.on(L.RoomEvent.TrackSubscribed,t=>{if(t.kind==="video"){const v=$l("liveRemote");if(v)t.attach(v);liveStatus("● Ao vivo")}else if(t.kind==="audio"){const a=$l("liveAudio");if(a)t.attach(a);try{room.startAudio()}catch(e){}}});
  room.on(L.RoomEvent.TrackUnsubscribed,t=>{try{t.detach()}catch(e){}});
  room.on(L.RoomEvent.Disconnected,()=>{if(liveRoom===room){liveRoom=null;liveStatus("Ligação terminada.")}})}
-function liveShell(host,titleTxt){
- const d=document.createElement("div");d.id="liveStudio";d.className="live-studio";
- d.innerHTML=`<div class="panel"><div class="row"><div><div class="live-tag">● ZAMBA LIVE</div><h2 style="margin:6px 0">${host?"Transmitir ao vivo":esc(titleTxt||"Live")}</h2></div><button class="g" data-lv="close" id="liveClose">Sair</button></div>
- ${host?`<div id="liveForm"><label>Título da Live</label><input id="liveTitle" maxlength="90" placeholder="Ex.: Música ao vivo com artistas de Niassa"><label>Categoria</label><select id="liveCategory"><option>Música</option><option>Conversa</option><option>Educação</option><option>Negócios</option><option>Entretenimento</option></select></div>`:""}
- <div class="row" style="margin:10px 0"><span class="live-state" id="liveStatus">${host?"Pronto para começar":"A ligar…"}</span><span class="live-state" id="liveCount">👁 0</span></div>
- <div style="position:relative"><video id="${host?"livePreview":"liveRemote"}" autoplay playsinline ${host?"muted":""} style="${host?"":"object-fit:contain"}"></video><div id="liveHearts" style="position:absolute;right:0;bottom:0;top:0;width:90px;pointer-events:none;overflow:hidden"></div></div>
- <div id="liveErr" class="note" style="display:none;border:1px solid #e5485d;margin:8px 0"></div><audio id="liveAudio" autoplay></audio>
- <div class="row" style="margin:10px 0">${host?`<button data-lv="golive" id="liveGo">● Iniciar Live</button>`:""}<button class="g" data-lv="heart">❤ Coração</button></div>
- <h3>Chat da Live</h3><div id="liveChatLog" class="live-chat"><p class="mu">As mensagens aparecem aqui enquanto a Live estiver aberta.</p></div>
- <div class="row" style="flex-wrap:nowrap"><input id="liveChatInput" maxlength="300" placeholder="Escreve uma mensagem…" style="flex:1;margin:0"><button data-lv="send">Enviar</button></div></div>`;
- document.body.appendChild(d)}
-async function openLiveStudio(){await closeLiveStudio();liveShell(true)}
+/* ---------- ecrã completo ---------- */
+function liveShell(host,info){
+ info=info||{};const nm=host?(prof?.name||"Tu"):(info.name||"");
+ const d=document.createElement("div");d.id="liveStudio";d.className="lv";
+ d.innerHTML=`<video id="${host?"livePreview":"liveRemote"}" autoplay playsinline ${host?"muted":""}></video><audio id="liveAudio" autoplay></audio>
+ <div class="lv-top"><div class="lv-av">${esc((nm||"?").slice(0,1).toUpperCase())}</div><div class="lv-t"><b id="liveHeadT">${esc(host?"A preparar a tua Live":(info.title||"Live"))}</b><small>${esc(nm)}</small></div><span class="live-tag" id="liveTag" style="display:none">● AO VIVO</span><span class="lv-pill" id="liveCount">👁 0</span><button class="lv-x" data-lv="close" id="liveClose" aria-label="Sair">✕</button></div>
+ <div id="liveGifts" class="lv-gfx"></div><div id="liveHearts" class="lv-hearts"></div>
+ <div id="liveStatus" class="lv-wait">${host?"":"A ligar…"}</div>
+ <div id="liveErr" class="lv-err" style="display:none"></div>
+ ${host?`<div id="liveSetup" class="lv-setup"><input id="liveTitle" maxlength="90" placeholder="Título da tua Live"><select id="liveCategory"><option>Música</option><option>Conversa</option><option>Educação</option><option>Negócios</option><option>Entretenimento</option></select><button id="liveGo" data-lv="golive" style="width:100%;padding:14px;font-size:16px">● Ir para o ar</button></div>`:""}
+ <div id="liveChatLog" class="lv-chat"></div>
+ <div class="lv-side">${host?`<button data-lv="flip" aria-label="Virar câmara">🔄</button><button data-lv="mic" id="liveMic" aria-label="Microfone">🎤</button>`:`<button data-lv="gifts" aria-label="Presentes">🎁</button>`}<button data-lv="heart" aria-label="Coração">❤</button><button data-lv="people" aria-label="Pessoas">👥</button></div>
+ <div class="lv-bar"><input id="liveChatInput" maxlength="300" placeholder="Diz alguma coisa…"><button data-lv="send" aria-label="Enviar">➤</button></div>
+ <div id="liveSheet"></div>`;
+ document.body.appendChild(d);
+ try{d.requestFullscreen&&d.requestFullscreen().catch(()=>{})}catch(e){}}
+async function livePreviewStart(){
+ if(liveMedia){liveMedia.getTracks().forEach(t=>t.stop());liveMedia=null}
+ try{liveMedia=await navigator.mediaDevices.getUserMedia({video:{facingMode:liveFacing},audio:false});const v=$l("livePreview");if(v)v.srcObject=liveMedia;liveErr("")}
+ catch(err){liveErr("Câmara: "+(err.message||err)+"\nPermite a câmara e o microfone: toca no cadeado ao lado do endereço do site.")}}
+async function openLiveStudio(){await closeLiveStudio();liveShell(true);await livePreviewStart()}
+async function liveFlip(){
+ liveFacing=liveFacing==="user"?"environment":"user";
+ try{
+  if(liveRoom){const L=window.LivekitClient;const pub=liveRoom.localParticipant.getTrackPublication(L.Track.Source.Camera);if(pub?.track)await pub.track.restartTrack({facingMode:liveFacing})}
+  else await livePreviewStart();
+ }catch(e){toast("Não foi possível virar a câmara.")}}
+async function liveToggleMic(){
+ if(!liveRoom)return;liveMuted=!liveMuted;
+ try{await liveRoom.localParticipant.setMicrophoneEnabled(!liveMuted);const b=$l("liveMic");if(b)b.textContent=liveMuted?"🔇":"🎤"}catch(e){}}
 async function liveStartHost(){
- const title=(document.getElementById("liveTitle")?.value||"").trim(),cat=document.getElementById("liveCategory")?.value||"";
+ const title=(($l("liveTitle")?.value)||"").trim(),cat=$l("liveCategory")?.value||"";
  if(!title){toast("Escreve um título para a Live.");return}
- const go=document.getElementById("liveGo");if(go)go.disabled=true;
+ const go=$l("liveGo");if(go)go.disabled=true;
  let st="1/4 carregar LiveKit";liveErr("");
  try{
   liveStatus("A ligar…");
@@ -491,36 +552,36 @@ async function liveStartHost(){
   st="2/4 pedir acesso ao servidor (função smooth-responder)";
   const{token,url}=await liveToken("zamba-"+me.id,true);
   st="3/4 ligar ao LiveKit";
+  if(liveMedia){liveMedia.getTracks().forEach(t=>t.stop());liveMedia=null}
   const room=new L.Room({adaptiveStream:true,dynacast:true});
   liveBind(room,L,me.id);
   await room.connect(url,token);
-  liveRoom=room;liveHostId=me.id;
+  liveRoom=room;liveHostId=me.id;liveRoster={};liveNames=[];
   st="4/4 abrir câmara e microfone";
-  await room.localParticipant.setCameraEnabled(true);
+  await room.localParticipant.setCameraEnabled(true,{facingMode:liveFacing});
   await room.localParticipant.setMicrophoneEnabled(true);
   const pub=room.localParticipant.getTrackPublication(L.Track.Source.Camera);
-  const v=document.getElementById("livePreview");if(pub?.track&&v)pub.track.attach(v);
+  const v=$l("livePreview");if(pub?.track&&v)pub.track.attach(v);
   await ensureDir();
   if(liveDir)await liveDir.track({host:me.id,name:prof?.name||"Utilizador",title,category:cat,at:new Date().toISOString()});
-  const f=document.getElementById("liveForm");if(f)f.style.display="none";
-  if(go)go.style.display="none";
-  const c=document.getElementById("liveClose");if(c)c.textContent="Terminar Live";
+  const su=$l("liveSetup");if(su)su.remove();
+  const h=$l("liveHeadT");if(h)h.textContent=title;
+  const tg=$l("liveTag");if(tg)tg.style.display="inline-block";
   liveErr("");liveStatus("● Estás ao vivo");liveSetCount();
+  liveChatLine("","Estás ao vivo. Os espectadores vão aparecer aqui.","j");
  }catch(err){
   if(liveRoom){try{await liveRoom.disconnect()}catch(e){}liveRoom=null}
   const raw=String(err?.message||err);let dica="";
   if(st.startsWith("1"))dica="Sem internet ou o carregamento do LiveKit foi bloqueado.";
-  else if(st.startsWith("2"))dica=/Edge Function|Failed to send|fetch/i.test(raw)?"A função smooth-responder não respondeu. Confirma no Supabase que está publicada e tem os 3 segredos (LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET).":"";
+  else if(st.startsWith("2"))dica=/Edge Function|Failed to send|fetch/i.test(raw)?"A função smooth-responder não respondeu. Confirma no Supabase que está publicada e tem os 3 segredos.":"";
   else if(st.startsWith("3"))dica="O segredo LIVEKIT_URL deve começar por wss:// e ser o endereço do teu projeto LiveKit.";
-  else if(st.startsWith("4"))dica="Permite a câmara e o microfone: toca no cadeado ao lado do endereço do site e ativa as permissões.";
-  liveStatus("Não foi possível começar.");
-  liveErr("Falhou no passo "+st+".\nErro: "+raw+(dica?"\n"+dica:""));
-  document.getElementById("liveErr")?.style.setProperty("white-space","pre-wrap");
-  if(go)go.disabled=false;
+  else if(st.startsWith("4"))dica="Permite a câmara e o microfone: toca no cadeado ao lado do endereço do site.";
+  liveStatus("");liveErr("Falhou no passo "+st+".\nErro: "+raw+(dica?"\n"+dica:""));
+  if(go)go.disabled=false;livePreviewStart();
  }}
 async function liveWatch(hostId){
  const info=liveLives[hostId]||{};
- await closeLiveStudio();liveShell(false,info.title);liveHostId=hostId;
+ await closeLiveStudio();liveShell(false,info);liveHostId=hostId;
  try{
   await loadLK();const L=window.LivekitClient;
   const{token,url}=await liveToken("zamba-"+hostId,false);
@@ -529,7 +590,20 @@ async function liveWatch(hostId){
   await room.connect(url,token);
   liveRoom=room;liveSetCount();
   liveStatus(room.remoteParticipants.size?"● Ao vivo":"À espera do anfitrião…");
- }catch(err){liveStatus("Não foi possível entrar.");liveErr("Erro: "+(err.message||err))}}
+  await liveSend({t:"join",name:prof?.name||"Utilizador"});
+  const tg=$l("liveTag");if(tg)tg.style.display="inline-block";
+ }catch(err){liveStatus("");liveErr("Não foi possível entrar.\nErro: "+(err.message||err))}}
+async function liveGift(gid){
+ const g=LIVE_GIFTS.find(x=>x.id===gid);if(!g)return;
+ if(!liveRoom||liveHostId===me.id){toast("Só podes enviar presentes enquanto assistes a uma Live.");return}
+ if(coins<g.c){toast("Saldo insuficiente. Precisas de "+g.c+" Zamba Coins.");return}
+ const p=posts.filter(x=>x.author_id===liveHostId).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))[0];
+ if(!p){toast("Este anfitrião ainda não tem publicações, por isso não pode receber presentes.");return}
+ const r=await sb.rpc("send_gift",{p_post:p.id,p_amount:g.c});
+ if(r.error){toast(r.error.message);return}
+ await loadCoins();const c=$l("liveCoins");if(c)c.textContent=coins;
+ const m={t:"gift",name:prof?.name||"Utilizador",g:g.id};
+ await liveSend(m);liveGiftFx(m);liveSheet("")}
 document.addEventListener("click",async e=>{
  const lv=e.target.closest("[data-lv]");if(!lv)return;
  const a=lv.dataset.lv;
@@ -537,9 +611,15 @@ document.addEventListener("click",async e=>{
  if(a==="close"){await closeLiveStudio();return}
  if(a==="golive"){await liveStartHost();return}
  if(a==="watch"){await liveWatch(lv.dataset.host);return}
- if(a==="heart"){if(!liveRoom){toast("Não estás ligado à Live.");return}liveHeart();liveSend({t:"heart"});return}
+ if(a==="flip"){await liveFlip();return}
+ if(a==="mic"){await liveToggleMic();return}
+ if(a==="heart"){if(!liveRoom){toast("Não estás ligado à Live.");return}const n=Date.now();if(n-liveHeartAt<250)return;liveHeartAt=n;liveHeart();liveSend({t:"heart"});return}
+ if(a==="gifts"){liveSheet(liveGiftsHtml());loadCoins().then(()=>{const c=$l("liveCoins");if(c)c.textContent=coins});return}
+ if(a==="gift"){await liveGift(lv.dataset.g);return}
+ if(a==="people"){liveSheet(livePeopleHtml());return}
+ if(a==="sheetx"){liveSheet("");return}
  if(a==="send"){
-  const inp=document.getElementById("liveChatInput"),body=(inp?.value||"").trim();if(!body)return;
+  const inp=$l("liveChatInput"),body=(inp?.value||"").trim();if(!body)return;
   if(!liveRoom){toast("O chat só funciona com a Live ligada.");return}
   const name=prof?.name||"Utilizador";
   if(await liveSend({t:"chat",name,body}))liveChatLine(name,body);else toast("Não foi possível enviar a mensagem.");
