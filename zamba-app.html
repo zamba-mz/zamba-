@@ -452,6 +452,7 @@ function ensureDir(){
 function liveChatLine(user,body){const box=document.getElementById("liveChatLog");if(!box)return;const p=document.createElement("p");const b=document.createElement("b");b.textContent=(user||"Participante")+": ";p.append(b,document.createTextNode(body||""));box.appendChild(p);box.scrollTop=box.scrollHeight}
 function liveHeart(){const c=document.getElementById("liveHearts");if(!c)return;const h=document.createElement("span");h.className="live-heart";h.textContent="❤";h.style.right=(8+Math.random()*40)+"px";c.appendChild(h);setTimeout(()=>h.remove(),2000)}
 function liveSetCount(){const el=document.getElementById("liveCount");if(el&&liveRoom)el.textContent="👁 "+liveRoom.remoteParticipants.size}
+function liveErr(t){const e=document.getElementById("liveErr");if(!e)return;e.style.display=t?"block":"none";e.textContent=t||""}
 function liveStatus(t){const s=document.getElementById("liveStatus");if(s)s.textContent=t}
 async function liveSend(obj){if(!liveRoom)return false;try{await liveRoom.localParticipant.publishData(new TextEncoder().encode(JSON.stringify(obj)),{reliable:true});return true}catch(e){return false}}
 async function closeLiveStudio(){
@@ -473,7 +474,7 @@ function liveShell(host,titleTxt){
  ${host?`<div id="liveForm"><label>Título da Live</label><input id="liveTitle" maxlength="90" placeholder="Ex.: Música ao vivo com artistas de Niassa"><label>Categoria</label><select id="liveCategory"><option>Música</option><option>Conversa</option><option>Educação</option><option>Negócios</option><option>Entretenimento</option></select></div>`:""}
  <div class="row" style="margin:10px 0"><span class="live-state" id="liveStatus">${host?"Pronto para começar":"A ligar…"}</span><span class="live-state" id="liveCount">👁 0</span></div>
  <div style="position:relative"><video id="${host?"livePreview":"liveRemote"}" autoplay playsinline ${host?"muted":""} style="${host?"":"object-fit:contain"}"></video><div id="liveHearts" style="position:absolute;right:0;bottom:0;top:0;width:90px;pointer-events:none;overflow:hidden"></div></div>
- <audio id="liveAudio" autoplay></audio>
+ <div id="liveErr" class="note" style="display:none;border:1px solid #e5485d;margin:8px 0"></div><audio id="liveAudio" autoplay></audio>
  <div class="row" style="margin:10px 0">${host?`<button data-lv="golive" id="liveGo">● Iniciar Live</button>`:""}<button class="g" data-lv="heart">❤ Coração</button></div>
  <h3>Chat da Live</h3><div id="liveChatLog" class="live-chat"><p class="mu">As mensagens aparecem aqui enquanto a Live estiver aberta.</p></div>
  <div class="row" style="flex-wrap:nowrap"><input id="liveChatInput" maxlength="300" placeholder="Escreve uma mensagem…" style="flex:1;margin:0"><button data-lv="send">Enviar</button></div></div>`;
@@ -483,14 +484,18 @@ async function liveStartHost(){
  const title=(document.getElementById("liveTitle")?.value||"").trim(),cat=document.getElementById("liveCategory")?.value||"";
  if(!title){toast("Escreve um título para a Live.");return}
  const go=document.getElementById("liveGo");if(go)go.disabled=true;
+ let st="1/4 carregar LiveKit";liveErr("");
  try{
-  liveStatus("A ligar ao servidor…");
+  liveStatus("A ligar…");
   await loadLK();const L=window.LivekitClient;
+  st="2/4 pedir acesso ao servidor (função livekit-token)";
   const{token,url}=await liveToken("zamba-"+me.id,true);
+  st="3/4 ligar ao LiveKit";
   const room=new L.Room({adaptiveStream:true,dynacast:true});
   liveBind(room,L,me.id);
   await room.connect(url,token);
   liveRoom=room;liveHostId=me.id;
+  st="4/4 abrir câmara e microfone";
   await room.localParticipant.setCameraEnabled(true);
   await room.localParticipant.setMicrophoneEnabled(true);
   const pub=room.localParticipant.getTrackPublication(L.Track.Source.Camera);
@@ -500,11 +505,18 @@ async function liveStartHost(){
   const f=document.getElementById("liveForm");if(f)f.style.display="none";
   if(go)go.style.display="none";
   const c=document.getElementById("liveClose");if(c)c.textContent="Terminar Live";
-  liveStatus("● Estás ao vivo");liveSetCount();
+  liveErr("");liveStatus("● Estás ao vivo");liveSetCount();
  }catch(err){
   if(liveRoom){try{await liveRoom.disconnect()}catch(e){}liveRoom=null}
-  liveStatus("Não foi possível começar.");if(go)go.disabled=false;
-  toast("Live: "+(err.message||err));
+  const raw=String(err?.message||err);let dica="";
+  if(st.startsWith("1"))dica="Sem internet ou o carregamento do LiveKit foi bloqueado.";
+  else if(st.startsWith("2"))dica=/Edge Function|Failed to send|fetch/i.test(raw)?"A função livekit-token não respondeu. Confirma no Supabase que está publicada e tem os 3 segredos (LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET).":"";
+  else if(st.startsWith("3"))dica="O segredo LIVEKIT_URL deve começar por wss:// e ser o endereço do teu projeto LiveKit.";
+  else if(st.startsWith("4"))dica="Permite a câmara e o microfone: toca no cadeado ao lado do endereço do site e ativa as permissões.";
+  liveStatus("Não foi possível começar.");
+  liveErr("Falhou no passo "+st+".\nErro: "+raw+(dica?"\n"+dica:""));
+  document.getElementById("liveErr")?.style.setProperty("white-space","pre-wrap");
+  if(go)go.disabled=false;
  }}
 async function liveWatch(hostId){
  const info=liveLives[hostId]||{};
@@ -517,7 +529,7 @@ async function liveWatch(hostId){
   await room.connect(url,token);
   liveRoom=room;liveSetCount();
   liveStatus(room.remoteParticipants.size?"● Ao vivo":"À espera do anfitrião…");
- }catch(err){liveStatus("Não foi possível entrar.");toast("Live: "+(err.message||err))}}
+ }catch(err){liveStatus("Não foi possível entrar.");liveErr("Erro: "+(err.message||err))}}
 document.addEventListener("click",async e=>{
  const lv=e.target.closest("[data-lv]");if(!lv)return;
  const a=lv.dataset.lv;
