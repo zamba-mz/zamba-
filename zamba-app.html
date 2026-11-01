@@ -152,10 +152,11 @@ async function loadAdm(){const[a,b,c,d,e,f]=await Promise.all([sb.from("profiles
 function welcomeProfile(){let d=$("#md");if(!d){d=document.createElement("div");d.id="md";document.body.appendChild(d)}d.innerHTML=`<div class="box" style="text-align:center"><h2 style="margin-top:0">Bem-vindo à ZAMBA!</h2><p class="mu">Toca na foto para escolheres a tua foto de perfil. Podes escolher também uma capa.</p><div style="margin:14px 0"><span data-a="setav" style="position:relative;cursor:pointer;display:inline-block">${av(prof,96)}<span style="position:absolute;right:0;bottom:0;background:var(--a);border-radius:50%;width:30px;height:30px;display:grid;place-items:center">📷</span></span></div><div class="row" style="justify-content:center"><button class="g" data-a="setcv">🖼 Escolher capa</button><button data-a="skipav">Continuar</button></div></div>`}
 
 // ZAMBA NEXT: camada de experiência Live e navegação profissional (interface demonstrativa)
-V.live=function(){ensureDir();loadWallet();loadAdminGifts();loadLiveRank();return `<div class="live-hero"><div class="row"><span class="live-tag">● ZAMBA LIVE</span><span class="mu">ESTÚDIO DE TRANSMISSÃO</span></div><h1>O teu palco. O teu público.</h1><p>Transmite em direto para a comunidade ZAMBA, com chat e corações em tempo real.</p><button data-lv="start">● Iniciar uma Live</button><button class="g" data-lv="schedule">◷ Preparar agendamento</button></div>
+V.live=function(){ensureDir();loadWallet();loadAdminGifts();loadLiveRank();loadTournaments();return `<div class="live-hero"><div class="row"><span class="live-tag">● ZAMBA LIVE</span><span class="mu">ESTÚDIO DE TRANSMISSÃO</span></div><h1>O teu palco. O teu público.</h1><p>Transmite em direto para a comunidade ZAMBA, com chat e corações em tempo real.</p><button data-lv="start">● Iniciar uma Live</button><button class="g" data-lv="schedule">◷ Preparar agendamento</button></div>
 <div class="live-tools"><div class="live-tool"><b>🎁 Presentes</b><span class="mu">Sistema Zamba Coins ligado ao livro de movimentos existente</span></div><div class="live-tool"><b>🎙️ Câmara e microfone</b><span class="mu">Transmissão em direto a partir do teu dispositivo</span></div><div class="live-tool"><b>🛡️ Segurança</b><span class="mu">Acesso à Live controlado por token seguro no servidor</span></div></div>
 <div class="box"><h3 style="margin-top:0">🔴 Ao vivo agora</h3><div id="liveNow">${liveNowHtml()}</div><div class="mu" id="liveDiag" style="margin-top:10px;font-size:11px">${liveDiagTxt()}</div></div>
 <div class="box"><h3 style="margin-top:0">Como funciona</h3><div class="live-steps"><div>01 <b>Preparar a sala</b><span class="mu">Título, categoria e permissões</span></div><div>02 <b>Testar equipamento</b><span class="mu">Câmara e microfone do dispositivo</span></div><div>03 <b>Transmitir para o público</b><span class="mu">Os espectadores veem-te em direto e podem escrever no chat</span></div></div><button data-lv="start" style="width:100%;margin-top:12px">Iniciar uma Live</button></div>
+<div class="box"><h3 style="margin-top:0">⚔ Torneios ZAMBA</h3><div id="liveTourn">${tnInner()}</div></div>
 <div class="box"><h3 style="margin-top:0">🏆 Ranking da Live <span class="mu" style="font-size:12px;font-weight:400">· últimos 7 dias</span></h3><div id="liveRank">${liveRankInner()}</div></div>
 <div class="box"><h3 style="margin-top:0">🎁 Presentes ZAMBA</h3><p class="mu" style="margin-top:0">Quem assiste pode enviar presentes ao anfitrião durante a Live. Preços em Zamba Coins:</p><div class="lv-zg" style="cursor:default"><img src="${ZL}" style="width:54px;height:54px;border-radius:12px"><div><b>Presente ZAMBA</b><small>O presente exclusivo da plataforma</small></div><span>🪙 500</span></div><div class="lv-gg" style="margin-top:8px">${LIVE_GIFTS.filter(g=>!g.z).map(g=>`<div style="background:var(--p2);border-radius:14px;padding:12px 6px;text-align:center"><span style="font-size:30px;display:block">${g.e}</span><b>${g.n}</b><small class="mu" style="display:block">🪙 ${g.c}</small></div>`).join("")}</div></div>
 ${isAdm?`<div class="box"><h3 style="margin-top:0">👑 Visão do fundador · presentes</h3><div id="liveAdminGifts"><div class="mu">A carregar…</div></div></div>`:""}
@@ -440,6 +441,7 @@ const lvFmt=n=>n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?(n/1e3).toFixed(1)+"k":Strin
 let liveStats=null,liveStatsT=null,liveStatsTick=null,walletRows=null,walletAt=0;
 let liveRoom=null,liveDir=null,liveDirReady=null,liveDirFor=null,liveDirState="a ligar…",liveLives={},liveHostId=null,liveMedia=null,liveRoster={},liveNames=[],liveFacing="user",liveMuted=false,liveHeartAt=0,livePres={},liveSrv={},liveSrvErr="",liveSrvTimer=null,liveSeen=new Set(),liveAsks={},liveStage=new Set(),liveBattle=null,liveBattleTick=null,liveGiftSide="h",liveOnStage=false;
 let liveMutedSet=new Set(),liveBlocked=new Set(),liveWaveAt=0,liveReportCtx=null,lvAC=null,liveTop=[],liveTop1="",liveGoalDone=false,liveHostName="",liveFilter="all",liveRankKind="creators",liveRankRows=null,liveRankAt=0;
+let tnData=null,tnAt=0,liveMatch=null;
 function loadLK(){return new Promise((ok,no)=>{if(window.LivekitClient)return ok();const s=document.createElement("script");s.src=LK_SRC;s.onload=ok;s.onerror=()=>no(new Error("Não foi possível carregar o LiveKit. Verifica a internet."));document.head.appendChild(s)})}
 async function liveToken(room,host,extra){
  const{data,error}=await sb.functions.invoke("smooth-responder",{body:{room,host,...(extra||{})}});
@@ -564,7 +566,7 @@ async function closeLiveStudio(){
  if(r){try{await r.disconnect()}catch(e){}}
  if(liveMedia){liveMedia.getTracks().forEach(t=>t.stop());liveMedia=null}
  if(liveDir&&liveHostId===me?.id){try{await liveDir.untrack()}catch(e){}}
- clearInterval(liveStatsTick);clearInterval(liveBattleTick);clearTimeout(liveStatsT);liveStatsT=null;liveStats=null;liveBattle=null;liveAsks={};liveStage=new Set();liveOnStage=false;liveMutedSet=new Set();liveBlocked=new Set();liveTop=[];liveTop1="";
+ clearInterval(liveStatsTick);clearInterval(liveBattleTick);clearTimeout(liveStatsT);liveStatsT=null;liveStats=null;liveBattle=null;liveAsks={};liveStage=new Set();liveOnStage=false;liveMutedSet=new Set();liveBlocked=new Set();liveTop=[];liveTop1="";liveMatch=null;
  liveHostId=null;liveRoster={};liveNames=[];liveMuted=false;
  try{if(document.fullscreenElement)await document.exitFullscreen()}catch(e){}
  document.getElementById("liveStudio")?.remove()}
@@ -654,11 +656,11 @@ function liveBattleUI(){
  document.querySelector(`#liveGuests [data-gid="${liveBattle.guest}"]`)?.classList.add("bt");
  liveBattleScoreUI();clearInterval(liveBattleTick);liveBattleTick=setInterval(liveBattleTickFn,500)}
 function liveBattleStart(min){
- const guest=[...liveStage][0];if(!guest){liveToast("Convida alguém para o palco primeiro.");return}
+ const guest=(liveMatch&&liveStage.has(liveMatch.bId))?liveMatch.bId:[...liveStage][0];if(!guest){liveToast("Convida alguém para o palco primeiro.");return}
  liveBattle={end:Date.now()+min*60000,h:0,g:0,guest,gname:liveRoster[guest]||"Convidado"};
  liveSend({t:"battle",on:1,end:liveBattle.end,guest,gname:liveBattle.gname});
  liveBattleUI();liveSheet("");liveChatLine("","⚔ A batalha começou!","j");liveStatsSoon()}
-function liveBattleEnd(){const b=liveBattle;if(!b)return;clearInterval(liveBattleTick);liveSend({t:"battle",on:0,h:b.h,g:b.g});liveBattleFinish(b.h,b.g)}
+function liveBattleEnd(){const b=liveBattle;if(!b)return;clearInterval(liveBattleTick);liveSend({t:"battle",on:0,h:b.h,g:b.g});liveBattleFinish(b.h,b.g);if(liveMatch&&liveHostId===me?.id)liveMatchFinish()}
 function liveBattleFinish(h,g){
  clearInterval(liveBattleTick);const nm=liveBattle?.gname||"Convidado";liveBattle=null;
  const st=$l("liveStudio");if(st)st.classList.remove("lv-battle");
@@ -666,6 +668,10 @@ function liveBattleFinish(h,g){
  const w=h===g?"Empate!":h>g?"🏆 Venceu o anfitrião":"🏆 Venceu "+esc(nm);
  liveSheet(`<div style="text-align:center"><div style="font-size:42px">⚔</div><h2 style="margin:6px 0">${w}</h2><div class="kp"><div><b>${h}</b>Anfitrião</div><div><b>${g}</b>${esc(nm)}</div></div><button class="g" data-lv="sheetx" style="width:100%;margin-top:14px">Fechar</button></div>`)}
 function liveBattleSheet(){
+ if(liveMatch&&!liveBattle){
+  const hd=`<div class="row"><b>⚔ ${esc(liveMatch.round)} do torneio</b><button class="g" data-lv="sheetx">✕</button></div>`;
+  if(!liveStage.has(liveMatch.bId))return hd+`<p class="mu">Primeiro convida <b>${esc(liveMatch.bName)}</b> para o palco: ele entra na tua Live, toca em Participar, e tu aceitas em Pessoas.</p>`;
+  return hd+`<p class="mu">Tu vs <b>${esc(liveMatch.bName)}</b> · ${liveMatch.minutes} min. Quem receber mais presentes ganha, e o resultado fica registado no torneio.</p><button data-lv="tnbattle" style="width:100%">⚔ Começar batalha</button>`}
  if(liveBattle)return`<div class="row"><b>⚔ Batalha em curso</b><button class="g" data-lv="sheetx">✕</button></div><button data-lv="battleend" style="width:100%;margin-top:12px;background:#e5485d">Terminar batalha</button>`;
  if(!liveStage.size)return`<div class="row"><b>⚔ Batalha</b><button class="g" data-lv="sheetx">✕</button></div><p class="mu">Para fazer uma batalha, convida alguém para o palco: toca em Pessoas e depois em Convidar p/ palco. Os presentes de cada lado somam pontos.</p>`;
  return`<div class="row"><b>⚔ Batalha com ${esc(liveRoster[[...liveStage][0]]||"Convidado")}</b><button class="g" data-lv="sheetx">✕</button></div><p class="mu">Quem receber mais presentes durante o tempo ganha.</p><div class="row"><button data-lv="battlego" data-m="3">3 min</button><button data-lv="battlego" data-m="5">5 min</button><button data-lv="battlego" data-m="10">10 min</button></div>`}
@@ -859,6 +865,11 @@ document.addEventListener("click",async e=>{
  if(a==="gift"){await liveGift(lv.dataset.g);return}
  if(a==="people"){liveSheet(livePeopleHtml());return}
  if(a==="invite"){await liveInvite();return}
+ if(a==="tncreate"){const title=(prompt("Nome do torneio","Torneio ZAMBA")||"").trim();if(!title)return;const size=Number(prompt("Quantos criadores? (4 ou 8)","4"));if(![4,8].includes(size)){toast("Escolhe 4 ou 8.");return}const min=Number(prompt("Duração de cada batalha, em minutos","3"))||3;const r=await sb.rpc("create_tournament",{p_title:title,p_size:size,p_minutes:min});toast(r.error?r.error.message:"Torneio criado!");loadTournaments(true);return}
+ if(a==="tnjoin"||a==="tnleave"||a==="tnstart"){const fn=a==="tnjoin"?"join_tournament":a==="tnleave"?"leave_tournament":"start_tournament";const r=await sb.rpc(fn,{p_id:lv.dataset.id});toast(r.error?r.error.message:a==="tnjoin"?"Inscrição feita!":a==="tnleave"?"Saíste do torneio.":"Torneio iniciado! Bons jogos.");loadTournaments(true);return}
+ if(a==="tnreset"){const r=await sb.rpc("reset_match",{p_match:lv.dataset.id});toast(r.error?r.error.message:"Jogo reposto.");loadTournaments(true);return}
+ if(a==="tnmatch"){await tnOpenMatch(lv.dataset.id);return}
+ if(a==="tnbattle"){if(!liveMatch)return;const r=await sb.rpc("start_match",{p_match:liveMatch.id});if(r.error){liveToast(r.error.message);return}liveBattleStart(liveMatch.minutes);return}
  if(a==="more"){liveSheet(liveMoreHtml());return}
  if(a==="rank"){liveSheet(liveTopHtml());return}
  if(a==="annsheet"){liveSheet(liveAnnHtml());return}
@@ -919,6 +930,55 @@ async function loadAdminGifts(){
    html=`<div class="kp"><div><b>${R.length}</b>presentes</div><div><b>${tot}</b>Coins movidas</div></div>`+(R.length?R.slice(0,15).map(x=>`<div class="row" style="padding:8px 0;border-top:1px solid var(--ln)"><span>${esc(x.sender_name||"?")} → ${esc(x.recipient_name||"?")}<br><small class="mu">${esc(x.gift_id)} · ${new Date(x.created_at).toLocaleString("pt-PT")}</small></span><b>🪙 ${x.coins}</b></div>`).join(""):`<div class="mu" style="margin-top:8px">Ainda sem presentes.</div>`)}
  }catch(e){html=`<div class="mu">${esc(e.message||e)}</div>`}
  const el=document.getElementById("liveAdminGifts");if(el)el.innerHTML=html}
+
+function tnRoundName(size,round){const last=Math.log2(size);return round===last?"Final":round===last-1?"Semifinal":"Ronda "+round}
+function tnInner(){
+ const d=tnData,head=isAdm?`<button data-lv="tncreate" style="width:100%;margin-bottom:10px">＋ Criar torneio</button>`:"";
+ if(!d)return head+`<div class="mu">A carregar…</div>`;
+ if(d.error)return head+`<div class="mu">${esc(d.error)}</div>`;
+ if(!d.list.length)return head+`<div class="mu">Ainda não há torneios. Os torneios oficiais da ZAMBA aparecem aqui.</div>`;
+ const nm=id=>esc(d.names[id]||"—");
+ return head+d.list.map(t=>{
+  const ent=d.E.filter(x=>x.tournament_id===t.id),joined=ent.some(x=>x.user_id===me.id),ms=d.M.filter(x=>x.tournament_id===t.id);
+  const st=t.status==="open"?"Inscrições abertas":t.status==="running"?"Em curso":"Terminado",canMng=isAdm||t.created_by===me.id;
+  let body="";
+  if(t.status==="open"){
+   body=`<div class="mu">${ent.length}/${t.size} inscritos${ent.length?": "+ent.map(x=>nm(x.user_id)).join(", "):""}</div><div class="row" style="margin-top:8px;justify-content:flex-start;gap:8px">${joined?`<button class="g" data-lv="tnleave" data-id="${t.id}">Sair</button>`:`<button data-lv="tnjoin" data-id="${t.id}"${ent.length>=t.size?" disabled":""}>Inscrever-me</button>`}${canMng&&ent.length===t.size?`<button data-lv="tnstart" data-id="${t.id}">▶ Iniciar torneio</button>`:""}</div>`
+  }else{
+   body=ms.map(m=>{
+    const mine=m.a_id===me.id&&m.status==="pending"&&m.b_id;
+    const line=(m.a_id||m.b_id)?`${nm(m.a_id)} <span class="mu">vs</span> ${nm(m.b_id)}`:`<span class="mu">A definir</span>`;
+    const res=m.status==="done"?` — 🏆 ${nm(m.winner_id)} <span class="mu">(${m.a_score}–${m.b_score})</span>`:m.status==="live"?` — <b style="color:#e5485d">● a decorrer</b>`:"";
+    return`<div style="padding:8px 0;border-top:1px solid var(--ln)"><div class="mu" style="font-size:12px">${tnRoundName(t.size,m.round)} · jogo ${m.slot}</div><div>${line}${res}</div>${mine?`<button data-lv="tnmatch" data-id="${m.id}" style="margin-top:6px">⚔ Iniciar a minha batalha</button>`:""}${m.b_id===me.id&&m.status==="pending"&&m.a_id?`<div class="mu" style="margin-top:6px">Aguarda: ${nm(m.a_id)} vai fazer Live e convidar-te para o palco.</div>`:""}${m.status==="live"&&canMng?`<button class="g" data-lv="tnreset" data-id="${m.id}" style="margin-top:6px">↺ Repor jogo</button>`:""}</div>`}).join("")+(t.champion_id?`<div style="margin-top:10px;font-weight:800">🏆 Campeão: ${nm(t.champion_id)}</div>`:"")}
+  return`<div style="background:var(--p2);border-radius:14px;padding:12px;margin-bottom:10px"><div class="row"><b>${esc(t.title)}</b><span class="mu" style="font-size:12px">${st}</span></div><div class="mu" style="font-size:12px;margin:2px 0 8px">${t.size} criadores · batalhas de ${t.battle_minutes} min</div>${body}</div>`}).join("")}
+async function loadTournaments(force){
+ if(!me)return;if(!force&&Date.now()-tnAt<6000)return;tnAt=Date.now();
+ try{
+  const t=await sb.from("tournaments").select("*").order("created_at",{ascending:false}).limit(8);
+  if(t.error)throw new Error(/relation|schema cache|does not exist/i.test(t.error.message)?"Falta instalar os torneios no Supabase.":t.error.message);
+  const ids=(t.data||[]).map(x=>x.id);let E=[],M=[];
+  if(ids.length){const[e,m]=await Promise.all([sb.from("tournament_entries").select("tournament_id,user_id").in("tournament_id",ids),sb.from("tournament_matches").select("*").in("tournament_id",ids).order("round").order("slot")]);E=e.data||[];M=m.data||[]}
+  const uids=[...new Set([...E.map(x=>x.user_id),...M.flatMap(x=>[x.a_id,x.b_id,x.winner_id]),...(t.data||[]).map(x=>x.champion_id)].filter(Boolean))];
+  const names={};if(uids.length){const p=await sb.from("profiles").select("id,name").in("id",uids);(p.data||[]).forEach(x=>names[x.id]=x.name)}
+  tnData={list:t.data||[],E,M,names};
+ }catch(e){tnData={error:String(e.message||e)}}
+ const el=document.getElementById("liveTourn");if(el)el.innerHTML=tnInner()}
+async function tnOpenMatch(id){
+ const d=tnData,m=d?.M?.find(x=>x.id===id);if(!m)return;
+ const t=d.list.find(x=>x.id===m.tournament_id);if(!t)return;
+ await openLiveStudio();
+ liveMatch={id,tid:t.id,title:t.title,minutes:t.battle_minutes,bId:m.b_id,bName:d.names[m.b_id]||"Adversário",round:tnRoundName(t.size,m.round)};
+ const ti=$l("liveTitle");if(ti)ti.value="Torneio "+t.title+" · "+liveMatch.round;
+ const c=$l("liveCategory");if(c)c.value="Entretenimento";
+ liveSheet(`<div class="row"><b>⚔ ${esc(liveMatch.round)} do torneio</b><button class="g" data-lv="sheetx">✕</button></div><p class="mu">Adversário: <b>${esc(liveMatch.bName)}</b>.<br>1) Toca em Ir para o ar.<br>2) Convida ${esc(liveMatch.bName)} (botão Convidar). Ele entra na tua Live e toca em Participar.<br>3) Aceita em Pessoas e toca em Batalha para começar (${liveMatch.minutes} min).</p>`)}
+async function liveMatchFinish(){
+ const m=liveMatch;if(!m)return;
+ await new Promise(r=>setTimeout(r,1500));
+ const r=await sb.rpc("finish_match",{p_match:m.id});
+ if(r.error){liveToast("Torneio: "+r.error.message);return}
+ if(r.data){liveMatch=null;liveToast("🏆 Resultado oficial registado no torneio.")}
+ else liveToast("Empate! A batalha tem de ser repetida: toca em Batalha outra vez.");
+ tnAt=0}
 document.addEventListener("click",e=>{const t=e.target.closest("[data-t]");if(t){if(t.dataset.t==="shorts"&&shortVids().length){shortOpen(shortVids()[0].id);return}tab=t.dataset.t;if(tab==="com")comInit=false;if(tab==="studio")stu=null;if(tab==="chat"){localStorage.setItem("zb_seen_msgs"+me.id,new Date().toISOString());bellN=0}render();return}const a=e.target.closest("[data-a]");if(a)act(a.dataset.a,a.dataset.i)});
 window.onerror=m=>toast("Erro: "+m);boot();setInterval(async()=>{if(!isAdm||!me)return;await adminStats();const k=document.getElementById("kpi");if(k&&adminData)k.innerHTML=KPI(adminData)},20000);
 </script></body></html>
