@@ -152,11 +152,12 @@ async function loadAdm(){const[a,b,c,d,e,f]=await Promise.all([sb.from("profiles
 function welcomeProfile(){let d=$("#md");if(!d){d=document.createElement("div");d.id="md";document.body.appendChild(d)}d.innerHTML=`<div class="box" style="text-align:center"><h2 style="margin-top:0">Bem-vindo à ZAMBA!</h2><p class="mu">Toca na foto para escolheres a tua foto de perfil. Podes escolher também uma capa.</p><div style="margin:14px 0"><span data-a="setav" style="position:relative;cursor:pointer;display:inline-block">${av(prof,96)}<span style="position:absolute;right:0;bottom:0;background:var(--a);border-radius:50%;width:30px;height:30px;display:grid;place-items:center">📷</span></span></div><div class="row" style="justify-content:center"><button class="g" data-a="setcv">🖼 Escolher capa</button><button data-a="skipav">Continuar</button></div></div>`}
 
 // ZAMBA NEXT: camada de experiência Live e navegação profissional (interface demonstrativa)
-V.live=function(){ensureDir();loadWallet();return `<div class="live-hero"><div class="row"><span class="live-tag">● ZAMBA LIVE</span><span class="mu">ESTÚDIO DE TRANSMISSÃO</span></div><h1>O teu palco. O teu público.</h1><p>Transmite em direto para a comunidade ZAMBA, com chat e corações em tempo real.</p><button data-lv="start">● Iniciar uma Live</button><button class="g" data-lv="schedule">◷ Preparar agendamento</button></div>
+V.live=function(){ensureDir();loadWallet();loadAdminGifts();return `<div class="live-hero"><div class="row"><span class="live-tag">● ZAMBA LIVE</span><span class="mu">ESTÚDIO DE TRANSMISSÃO</span></div><h1>O teu palco. O teu público.</h1><p>Transmite em direto para a comunidade ZAMBA, com chat e corações em tempo real.</p><button data-lv="start">● Iniciar uma Live</button><button class="g" data-lv="schedule">◷ Preparar agendamento</button></div>
 <div class="live-tools"><div class="live-tool"><b>🎁 Presentes</b><span class="mu">Sistema Zamba Coins ligado ao livro de movimentos existente</span></div><div class="live-tool"><b>🎙️ Câmara e microfone</b><span class="mu">Transmissão em direto a partir do teu dispositivo</span></div><div class="live-tool"><b>🛡️ Segurança</b><span class="mu">Acesso à Live controlado por token seguro no servidor</span></div></div>
 <div class="box"><h3 style="margin-top:0">🔴 Ao vivo agora</h3><div id="liveNow">${liveNowHtml()}</div><div class="mu" id="liveDiag" style="margin-top:10px;font-size:11px">${liveDiagTxt()}</div></div>
 <div class="box"><h3 style="margin-top:0">Como funciona</h3><div class="live-steps"><div>01 <b>Preparar a sala</b><span class="mu">Título, categoria e permissões</span></div><div>02 <b>Testar equipamento</b><span class="mu">Câmara e microfone do dispositivo</span></div><div>03 <b>Transmitir para o público</b><span class="mu">Os espectadores veem-te em direto e podem escrever no chat</span></div></div><button data-lv="start" style="width:100%;margin-top:12px">Iniciar uma Live</button></div>
 <div class="box"><h3 style="margin-top:0">🎁 Presentes ZAMBA</h3><p class="mu" style="margin-top:0">Quem assiste pode enviar presentes ao anfitrião durante a Live. Preços em Zamba Coins:</p><div class="lv-zg" style="cursor:default"><img src="${ZL}" style="width:54px;height:54px;border-radius:12px"><div><b>Presente ZAMBA</b><small>O presente exclusivo da plataforma</small></div><span>🪙 500</span></div><div class="lv-gg" style="margin-top:8px">${LIVE_GIFTS.filter(g=>!g.z).map(g=>`<div style="background:var(--p2);border-radius:14px;padding:12px 6px;text-align:center"><span style="font-size:30px;display:block">${g.e}</span><b>${g.n}</b><small class="mu" style="display:block">🪙 ${g.c}</small></div>`).join("")}</div></div>
+${isAdm?`<div class="box"><h3 style="margin-top:0">👑 Visão do fundador · presentes</h3><div id="liveAdminGifts"><div class="mu">A carregar…</div></div></div>`:""}
 <div class="box"><h3 style="margin-top:0">🪙 Presentes e carteira</h3><div id="liveWallet">${walletInner()}</div><p class="mu" style="font-size:12px;margin:12px 0">Moedas de demonstração: sem valor em dinheiro e sem levantamento, até haver compra real e regras aprovadas.</p><button class="g" data-t="profile" style="width:100%">Abrir perfil e saldo de Coins</button></div>
 <div class="note">Live ligada ao LiveKit: o anfitrião transmite vídeo e áudio; quem entra assiste e participa no chat e nos corações. A Live só dura enquanto o anfitrião estiver com a página aberta.</div>`};
 
@@ -751,27 +752,33 @@ async function liveWatch(hostId){
   const tg=$l("liveTag");if(tg)tg.style.display="inline-block";
  }catch(err){liveStatus("");liveErr("Não foi possível entrar.\nErro: "+(err.message||err))}}
 function liveGiftMsg(t,ok){const e=$l("liveGiftMsg");if(!e){liveToast(t);return}e.style.cssText="margin:8px 0;padding:8px 12px;border-radius:12px;font-weight:700;background:"+(ok?"#12331f":"#3a1220")+";color:"+(ok?"#7dffb0":"#ff9db0");e.textContent=t}
+let liveGiftBusy=false;
+function liveGiftErrTxt(m){m=String(m||"");if(/Not enough/i.test(m))return"Saldo insuficiente de Zamba Coins.";if(/yourself/i.test(m))return"Não podes enviar presentes a ti mesmo.";if(/inválido|invalid/i.test(m))return"Presente inválido.";if(/authenticated/i.test(m))return"Inicia sessão para enviar presentes.";return"O servidor recusou: "+m}
 async function liveGift(gid){
- const g=LIVE_GIFTS.find(x=>x.id===gid);if(!g)return;
+ const g=LIVE_GIFTS.find(x=>x.id===gid);if(!g||liveGiftBusy)return;
  if(!liveRoom){liveGiftMsg("Não estás ligado à Live.");return}
  if(liveHostId===me.id){liveGiftMsg("Não podes enviar presentes a ti mesmo.");return}
- liveGiftMsg("A enviar "+g.n+"…",true);
- try{await loadCoins()}catch(e){}
- const c0=$l("liveCoins");if(c0)c0.textContent=coins;
- if(coins<g.c){liveGiftMsg("Saldo insuficiente: tens "+coins+" Coins e este presente custa "+g.c+".");return}
- const side=(liveBattle&&liveGiftSide==="g")?"g":"h",authorId=side==="g"?liveBattle.guest:liveHostId;
- if(authorId===me.id){liveGiftMsg("Não podes enviar presentes a ti mesmo.");return}
- let pid=null;
- try{const q=await sb.from("posts").select("id").eq("author_id",authorId).order("created_at",{ascending:false}).limit(1);pid=q.data?.[0]?.id||null}catch(e){}
- if(!pid)pid=posts.filter(x=>x.author_id===authorId).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))[0]?.id||null;
- if(!pid){liveGiftMsg((side==="g"?"Este convidado":"Este anfitrião")+" ainda não tem nenhuma publicação. Por agora os presentes ficam ligados a uma publicação.");return}
- let r;try{r=await sb.rpc("send_gift",{p_post:pid,p_amount:g.c})}catch(e){liveGiftMsg("Erro de ligação: "+(e.message||e));return}
- if(r.error){liveGiftMsg("O servidor recusou: "+r.error.message);return}
- await loadCoins();const c=$l("liveCoins");if(c)c.textContent=coins;
- const m={t:"gift",name:prof?.name||"Utilizador",g:g.id,side};
- await liveSend(m);liveGiftFx(m);
- liveGiftMsg("✓ Enviaste "+(g.z?"o Presente ZAMBA":g.e+" "+g.n)+"!",true);
- setTimeout(()=>{if($l("liveGiftMsg"))liveSheet("")},1600)}
+ liveGiftBusy=true;
+ try{
+  liveGiftMsg("A enviar "+g.n+"…",true);
+  try{await loadCoins()}catch(e){}
+  const c0=$l("liveCoins");if(c0)c0.textContent=coins;
+  if(coins<g.c){liveGiftMsg("Saldo insuficiente: tens "+coins+" Coins e este presente custa "+g.c+".");return}
+  const side=(liveBattle&&liveGiftSide==="g")?"g":"h",authorId=side==="g"?liveBattle.guest:liveHostId;
+  if(authorId===me.id){liveGiftMsg("Não podes enviar presentes a ti mesmo.");return}
+  let r;try{r=await sb.rpc("send_live_gift",{p_recipient:authorId,p_host:liveHostId,p_gift:g.id,p_side:side})}catch(e){liveGiftMsg("Erro de ligação: "+(e.message||e));return}
+  if(r.error&&/Could not find the function|schema cache/i.test(r.error.message||"")){
+   let pid=null;
+   try{const q=await sb.from("posts").select("id").eq("author_id",authorId).order("created_at",{ascending:false}).limit(1);pid=q.data?.[0]?.id||null}catch(e){}
+   if(!pid){liveGiftMsg("Falta instalar a regra de presentes da Live no Supabase, e este perfil não tem publicações.");return}
+   r=await sb.rpc("send_gift",{p_post:pid,p_amount:g.c})}
+  if(r.error){liveGiftMsg(liveGiftErrTxt(r.error.message));return}
+  await loadCoins();const c=$l("liveCoins");if(c)c.textContent=coins;
+  const m={t:"gift",name:prof?.name||"Utilizador",g:g.id,side};
+  await liveSend(m);liveGiftFx(m);
+  liveGiftMsg("✓ Enviaste "+(g.z?"o Presente ZAMBA":g.e+" "+g.n)+"!",true);
+  setTimeout(()=>{if($l("liveGiftMsg"))liveSheet("")},1600)
+ }finally{liveGiftBusy=false}}
 document.addEventListener("click",async e=>{
  if(liveRoom&&e.target.closest("#liveStudio")&&!e.target.closest("[data-lv],input,select,button,.lv-sheet,.lv-setup,.lv-err")){liveTap(e);return}
  const lv=e.target.closest("[data-lv]");if(!lv)return;
@@ -824,6 +831,17 @@ async function loadWallet(){
  if(!me||Date.now()-walletAt<4000)return;walletAt=Date.now();
  try{await loadCoins();const r=await sb.from("coins_ledger").select("delta,reason,created_at").order("created_at",{ascending:false}).limit(300);walletRows=r.data||[]}catch(e){walletRows=walletRows||[]}
  const el=document.getElementById("liveWallet");if(el)el.innerHTML=walletInner()}
+
+let adminGiftsAt=0;
+async function loadAdminGifts(){
+ if(!isAdm||Date.now()-adminGiftsAt<4000)return;adminGiftsAt=Date.now();
+ let html;
+ try{const r=await sb.rpc("admin_live_gifts_overview");
+  if(r.error)html=`<div class="mu">${esc(r.error.message)}</div>`;
+  else{const R=r.data||[],tot=R.reduce((t,x)=>t+Number(x.coins||0),0);
+   html=`<div class="kp"><div><b>${R.length}</b>presentes</div><div><b>${tot}</b>Coins movidas</div></div>`+(R.length?R.slice(0,15).map(x=>`<div class="row" style="padding:8px 0;border-top:1px solid var(--ln)"><span>${esc(x.sender_name||"?")} → ${esc(x.recipient_name||"?")}<br><small class="mu">${esc(x.gift_id)} · ${new Date(x.created_at).toLocaleString("pt-PT")}</small></span><b>🪙 ${x.coins}</b></div>`).join(""):`<div class="mu" style="margin-top:8px">Ainda sem presentes.</div>`)}
+ }catch(e){html=`<div class="mu">${esc(e.message||e)}</div>`}
+ const el=document.getElementById("liveAdminGifts");if(el)el.innerHTML=html}
 document.addEventListener("click",e=>{const t=e.target.closest("[data-t]");if(t){if(t.dataset.t==="shorts"&&shortVids().length){shortOpen(shortVids()[0].id);return}tab=t.dataset.t;if(tab==="com")comInit=false;if(tab==="studio")stu=null;if(tab==="chat"){localStorage.setItem("zb_seen_msgs"+me.id,new Date().toISOString());bellN=0}render();return}const a=e.target.closest("[data-a]");if(a)act(a.dataset.a,a.dataset.i)});
 window.onerror=m=>toast("Erro: "+m);boot();setInterval(async()=>{if(!isAdm||!me)return;await adminStats();const k=document.getElementById("kpi");if(k&&adminData)k.innerHTML=KPI(adminData)},20000);
 </script></body></html>
