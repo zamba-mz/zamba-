@@ -86,6 +86,16 @@ body{background:radial-gradient(circle at 85% -8%,#5b2fd180,transparent 48%),rad
 .stt{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .stt button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px;border-radius:16px;background:linear-gradient(160deg,#35267a,#1d1540)!important;border:1px solid #6a52d0aa;font-size:13px;font-weight:700}
 .stt button span{font-size:26px;line-height:1}
+.pfr{position:relative;z-index:2}
+.pfa.live{background:conic-gradient(from 200deg,#ff2d55,#ff7a59,#ff2d55)}
+.pflive{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);background:#e5485d;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:10px;border:2px solid #0b0718;letter-spacing:.5px}
+.pfact{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 8px 0}
+.pfact button{width:100%;padding:12px 8px;border-radius:14px;font-weight:800;margin:0}
+.pfact .full{grid-column:1/-1}
+.pfact .lvb{background:linear-gradient(135deg,#ff2d55,#ff7a59)!important;color:#fff;box-shadow:0 6px 22px #ff2d5555}
+.pfh{display:flex;justify-content:space-between;align-items:center;margin:16px 8px 6px}
+body{overflow-x:hidden}
+.pf{overflow-x:clip}
 </style>
 </head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -190,7 +200,7 @@ const _cv=new Set();
 async function countView(id){if(!me||!id||_cv.has(id))return;_cv.add(id);const p=posts.find(x=>x.id===id);if(p&&p.author_id===me.id)return;const r=await sb.from("post_views").upsert({post_id:id,user_id:me.id},{ignoreDuplicates:true});if(r.error)return;const q=await sb.from("post_stats").select("*").eq("post_id",id).maybeSingle();if(q.data){stats[id]=q.data;const el=document.getElementById("vw-"+id);if(el)el.textContent=(q.data.views||0)+" visualizações"}}
 
 function studioHero(){
- const my=posts.filter(p=>p.author_id===me.id),tv=my.reduce((t,p)=>t+(stats[p.id]?.views||0),0),tl=my.reduce((t,p)=>t+(stats[p.id]?.likes||0),0),nf=nF(me.id),bd=pfBadges(me.id,nf,my,true),cv=prof?.cover_url;
+ const my=posts.filter(p=>p.author_id===me.id),tv=my.reduce((t,p)=>t+(stats[p.id]?.views||0),0),tl=my.reduce((t,p)=>t+(stats[p.id]?.likes||0),0),nf=nF(me.id),bd=pfBadges(me.id,nf,my,true,true),cv=prof?.cover_url;
  return`<div class="sth" style="background:${cv?`linear-gradient(#0b0718aa,#0b0718f2),url('${esc(cv)}') center/cover`:"linear-gradient(135deg,#7c5cff,#ff4d9a 60%,#ff7a59)"}"><div class="row" style="justify-content:flex-start;gap:12px;flex-wrap:nowrap"><span class="pfa" style="flex:none">${av(prof,64)}</span><div style="min-width:0"><div class="mhw" style="font-size:18px;margin:0">ZAMBA STUDIO</div><div style="font-size:19px;font-weight:900;margin-top:2px">${bd.crown?"👑 ":""}${esc(prof?.name||"")} ${vf(me.id)}</div><div class="pfbd" style="margin:6px 0 0">${bd.html}</div></div></div><div class="stk"><div><b>${fmtN(tv)}</b><small>Visualizações</small></div><div><b>${fmtN(tl)}</b><small>Gostos</small></div><div><b>${fmtN(nf)}</b><small>Seguidores</small></div><div><b>${fmtN(coins)}</b><small>Coins</small></div></div></div>`}
 function studioAdminBox(){
  if(!isAdm)return"";
@@ -203,19 +213,24 @@ function creatorPanel(){return`${studioHero()}${studioAdminBox()}${studioTools()
 let profTab="t",profCtx=null;
 const slug=n=>String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
 const PF_TOP={followers:50,views:1000},PF_VIRAL={views:200,likes:30};
-function pfBadges(uid,nFol,ps,isMe){
+const pfOfficial=(p0,isMe)=>/fundador|administrador/i.test((p0&&p0.title)||"")||["zamba","zamba_oficial","zambaoficial"].includes(slug((p0&&p0.name)||""))||!!(isMe&&isAdm);
+function pfBadges(uid,nFol,ps,isMe,off){
  const tv=ps.reduce((t,p)=>t+(stats[p.id]?.views||0),0),mv=Math.max(0,...ps.map(p=>stats[p.id]?.views||0)),ml=Math.max(0,...ps.map(p=>stats[p.id]?.likes||0));
- const top=nFol>=PF_TOP.followers||tv>=PF_TOP.views,viral=mv>=PF_VIRAL.views||ml>=PF_VIRAL.likes,founder=!!(isMe&&isAdm);
- return{top,viral,founder,crown:top||founder,html:`${viral?'<span class="bdg v">🔥 Viral</span>':""}${top?'<span class="bdg t">⭐ Top</span>':""}${founder?'<span class="bdg f">👑 Fundador</span>':""}`}}
-function profHtml(uid,p0,nFol,nFing,fl,isMe){p0=p0||{};const ps=posts.filter(p=>p.author_id===uid).sort((x,y)=>(stats[y.id]?.views||0)-(stats[x.id]?.views||0)),tv=ps.reduce((t,p)=>t+(stats[p.id]?.views||0),0),tl=ps.reduce((t,p)=>t+(stats[p.id]?.likes||0),0),isV=p=>(p.mime||"").startsWith("video"),isI=p=>(p.mime||"").startsWith("image")||p.type==="image",bd=pfBadges(uid,nFol,ps,isMe);
- const L=profTab==="v"?ps.filter(isV):profTab==="m"?ps.filter(p=>p.type==="music"):profTab==="p"?ps.filter(p=>p.price_mt>0&&p.type!=="music"):profTab==="f"?ps.filter(isI):ps;
- const T=[["t","Tudo ("+ps.length+")"],["v","Vídeos"],["m","Música"],["p","Produtos"],["f","Fotos"]],cv=p0.cover_url;
- const tile=p=>{const b=p.type==="music"?"♪ Música":p.price_mt>0?"🛒 Venda":"";return`<div class="pt" data-a="det" data-i="${p.id}" data-bg="${p.cover_url?`url('${esc(p.cover_url)}')`:"linear-gradient(135deg,#4c2fb8,#c2410c)"}"><span>▶ ${fmtN(stats[p.id]?.views||0)} · ❤ ${fmtN(stats[p.id]?.likes||0)}</span>${b?`<i>${b}</i>`:""}</div>`};
+ const top=nFol>=PF_TOP.followers||tv>=PF_TOP.views,viral=mv>=PF_VIRAL.views||ml>=PF_VIRAL.likes;
+ return{top,viral,off:!!off,crown:top||!!off,html:`${off?'<span class="bdg f">✓ ZAMBA Oficial</span>':""}${viral?'<span class="bdg v">🔥 Viral</span>':""}${top?'<span class="bdg t">⭐ Top</span>':""}`}}
+function profHtml(uid,p0,nFol,nFing,fl,isMe){p0=p0||{};
+ const ps=posts.filter(p=>p.author_id===uid),tv=ps.reduce((t,p)=>t+(stats[p.id]?.views||0),0),tl=ps.reduce((t,p)=>t+(stats[p.id]?.likes||0),0),off=pfOfficial(p0,isMe),bd=pfBadges(uid,nFol,ps,isMe,off);
+ const vids=ps.filter(p=>p.type!=="music"&&p.type!=="text"&&!(p.price_mt>0)).sort((x,y)=>new Date(y.created_at)-new Date(x.created_at)),cv=p0.cover_url;
+ const lv=(typeof liveLives!=="undefined"&&!isMe)?liveLives[uid]:null;
+ const tile=p=>`<div class="pt" data-a="det" data-i="${p.id}" data-bg="${p.cover_url?`url('${esc(p.cover_url)}')`:"linear-gradient(135deg,#4c2fb8,#c2410c)"}"><span>▶ ${fmtN(stats[p.id]?.views||0)} · ❤ ${fmtN(stats[p.id]?.likes||0)}</span></div>`;
  return`<div class="pf"><div class="pfb" ${isMe?'data-a="setcv"':""} style="background:${cv?`url('${esc(cv)}') center/cover`:"linear-gradient(135deg,#7c5cff,#ff4d9a 60%,#ff7a59)"}">${cv?"":`<div class="pfq">Criar.<br>Partilhar.<br>Vender. <i>Crescer.</i></div>`}${isMe?'<span class="pfedit">📷 Capa</span>':`<button class="ib" data-a="x" aria-label="Fechar" style="position:absolute;top:8px;right:8px;background:#000a!important">✕</button>`}</div>
- <div class="pfr"><span class="pfa" ${isMe?'data-a="setav"':""}>${av(p0,100)}${isMe?'<i class="pfcam">📷</i>':""}</span><div class="pfbt">${isMe?`<button class="g" data-a="pedit">✏️ Editar Perfil</button><button class="pfs" data-t="studio">🎛 ZAMBA Studio</button>`:`<button data-a="tf" data-i="${uid}">${fl?"A seguir ✓":"Seguir"}</button><button class="g" data-a="dmx" data-i="${uid}">Mensagem</button>`}</div></div>
- <div class="pfn">${bd.crown?'<span class="pfc">👑</span>':""}<span>${esc(p0.name||"")}</span> ${vf(uid)}</div><div class="pfbd">${bd.html}</div><div class="mu" style="margin:6px 8px 0">@${esc(slug(p0.name))}</div>${p0.bio?`<div class="pfbio">${esc(p0.bio)}</div>`:""}<div class="mu" style="margin:4px 8px">📍 ${esc(p0.province||"Moçambique")}${p0.title?" · "+esc(p0.title):""}</div>
+ <div class="pfr"><span class="pfa${lv?" live":""}" ${isMe?'data-a="setav"':""}>${av(p0,100)}${isMe?'<i class="pfcam">📷</i>':""}${lv?'<b class="pflive">AO VIVO</b>':""}</span></div>
+ <div class="pfn">${bd.crown?'<span class="pfc">👑</span>':""}<span>${esc(p0.name||"")}</span> ${vf(uid)}</div><div class="pfbd">${bd.html}</div><div class="mu" style="margin:6px 8px 0">@${esc(slug(p0.name))}</div>
+ ${p0.bio?`<div class="pfbio">${esc(p0.bio)}</div>`:isMe?`<div class="pfbio mu" data-a="pedit" style="cursor:pointer">＋ Adiciona uma descrição ao teu perfil</div>`:""}
+ <div class="mu" style="margin:4px 8px">${off?"✓ Conta oficial da ZAMBA":`📍 ${esc(p0.province||"Moçambique")}${p0.title?" · "+esc(p0.title):""}`}</div>
+ <div class="pfact">${isMe?`<button class="g" data-a="pedit">✏️ Editar Perfil</button><button class="pfs" data-t="studio">🎛 ZAMBA Studio</button><button class="lvb full" data-lv="start">🔴 Ir ao vivo</button>`:`<button data-a="tf" data-i="${uid}">${fl?"A seguir ✓":"Seguir"}</button><button class="g" data-a="dmx" data-i="${uid}">Mensagem</button>${lv?`<button class="lvb full" data-lv="watch" data-host="${esc(uid)}">🔴 Assistir Live agora</button>`:""}`}</div>
  <div class="pfst"><div data-a="flist" data-i="${uid}|followers" style="cursor:pointer"><b>${fmtN(nFol)}</b><small>Seguidores</small></div><div data-a="flist" data-i="${uid}|following" style="cursor:pointer"><b>${fmtN(nFing)}</b><small>A seguir</small></div><div><b>${fmtN(tl)}</b><small>Gostos</small></div><div><b>${fmtN(tv)}</b><small>Visualizações</small></div></div>
- <div class="pft">${T.map(t=>`<button class="${profTab===t[0]?"":"g"}" data-a="ptab" data-i="${t[0]}">${t[1]}</button>`).join("")}</div><div class="pg">${L.map(tile).join("")||`<div class="mu" style="grid-column:1/-1;padding:14px">Ainda sem publicações aqui.</div>`}</div></div>`}
+ <div class="pfh"><b>🎬 Vídeos</b><span class="mu">${vids.length} publicações</span></div><div class="pg">${vids.map(tile).join("")||`<div class="mu" style="grid-column:1/-1;padding:14px">${isMe?"Ainda não publicaste. Toca em Publicar para começar.":"Ainda sem vídeos."}</div>`}</div></div>`}
 
 function profOverlay(d){const[u,p,a,b,f]=profCtx;d.innerHTML=`<div style="width:100%;min-width:0">${profHtml(u,p,a,b,f,false)}</div>`;return true}
 const editInner=()=>`<button class="g" data-a="invite" style="width:100%;margin:8px 0">📨 Convidar amigos para a ZAMBA</button><label>Foto de perfil</label><input id="pav" type="file" accept="image/*"><label>Nome</label><input id="pn" value="${esc(prof?.name)}"><label>Número M-Pesa/e-Mola para receber (vendedores)</label><input id="pph" value="${esc(prof?.payout_phone||"")}" placeholder="84 000 0000"><label>Sobre mim</label><textarea id="pbio">${esc(prof?.bio||"")}</textarea><div style="margin-top:10px"><button data-a="prof">Guardar</button></div>`;
