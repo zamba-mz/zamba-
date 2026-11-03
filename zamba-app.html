@@ -94,9 +94,6 @@ body{background:radial-gradient(circle at 85% -8%,#5b2fd180,transparent 48%),rad
 .pfact .full{grid-column:1/-1}
 .pfact .lvb{background:linear-gradient(135deg,#ff2d55,#ff7a59)!important;color:#fff;box-shadow:0 6px 22px #ff2d5555}
 .pfh{display:flex;justify-content:space-between;align-items:center;margin:16px 8px 6px}
-body{overflow-x:hidden}
-.pf{overflow-x:clip}
-.logo{background:linear-gradient(90deg,#fff1b8,#ffc94d,#ff9a3c)!important;-webkit-background-clip:text;background-clip:text;color:transparent}
 .pfbrand{position:absolute!important;inset:0;display:flex;align-items:center;gap:12px;padding:0 18px;z-index:1}
 .pfbrand img{width:74px;height:74px;border-radius:18px;box-shadow:0 0 30px #ff4d9a88}
 .pfbw{font-size:34px;font-weight:900;letter-spacing:1px;background:linear-gradient(90deg,#fff1b8,#ffc94d,#ff9a3c);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
@@ -126,6 +123,39 @@ body{overflow-x:hidden}
 .stt .livetile{border:2px solid #ffcf5a!important;box-shadow:0 0 22px #ffcf5a77}
 .stt .livetile em{position:absolute;right:8px;top:8px;background:#e5485d;color:#fff;font-size:9px;font-style:normal;font-weight:900;padding:2px 6px;border-radius:8px;letter-spacing:.5px}
 .sts{display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px;border-radius:18px;background:linear-gradient(110deg,#2a1d62,#4b2bb0);border:1px solid #6a52d0}
+.pfov{width:min(640px,100%);height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:radial-gradient(circle at 85% -6%,#5b2fd180,transparent 45%),var(--bg);padding-bottom:30px}
+.pfx{position:fixed;top:calc(10px + env(safe-area-inset-top));right:12px;z-index:40;width:38px;height:38px;border-radius:50%;padding:0;background:#000b!important;border:1px solid #ffffff44;font-size:16px}
+.pfb{height:150px}
+.pfhead{display:flex;align-items:flex-end;gap:12px;margin:-46px 10px 0;position:relative;z-index:2}
+.pfhead .pfa{flex:none;padding:3px}
+.pfinfo{min-width:0;flex:1;padding-bottom:4px}
+.pfinfo .pfn{margin:0;font-size:22px;line-height:1.15;gap:6px;flex-wrap:nowrap}
+.pfname{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pfinfo .pfc{font-size:20px;flex:none}
+.pfinfo .pfbd{margin:5px 0 0;gap:6px}
+.pfat{color:var(--mu);font-size:13px;margin-top:4px}
+.seal{flex:none;filter:drop-shadow(0 0 8px #1e7bffaa)}
+.vf{filter:drop-shadow(0 0 5px #1e7bff99)}
+.pfavs{position:absolute;right:-2px;bottom:0;display:grid;place-items:center;background:#0b0718;border-radius:50%;padding:2px}
+.pfbio{font-size:14px;line-height:1.45;margin:10px 10px 0}
+.pftags{margin:8px 10px 0;gap:6px}
+.pftags span{font-size:12px;padding:3px 10px}
+.bdg{padding:3px 10px;font-size:11px}
+.pfst{gap:6px;margin:12px 8px}
+.pfst>div{padding:8px 2px;border-radius:14px}
+.pfst i{font-size:15px;margin-bottom:0}
+.pfst b{font-size:17px}
+.pfst small{font-size:10px}
+.pfact{margin:10px 8px 0;gap:8px}
+.pfact button{padding:10px 8px;font-size:14px;border-radius:12px}
+.pfcta{padding:9px 12px!important}
+.pfcta span{font-size:20px}.pfcta i{font-size:14px}.pfcta b{font-size:20px}
+.pft{margin:12px 8px 8px}
+.pft button{padding:7px 14px;font-size:13px}
+.sttop img{width:46px;height:46px}
+.stw{padding:12px}
+.stt button{min-height:74px;font-size:12px}.stt button span{font-size:22px}
+.sts{padding:10px}
 </style>
 </head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -162,7 +192,8 @@ let fol=[],seen=new Set(),rxs=[];
 const sg=n=>n+(n===1?" seguidor":" seguidores"),rc=(id,k)=>rxs.filter(x=>x.post_id===id&&x.kind===k).length,mr=id=>rxs.find(x=>x.post_id===id&&x.user_id===me.id)?.kind||(likedSet.has(id)?"love":null);
 const capSt=q=>({top:"top:12%;left:0;right:0;text-align:center",middle:"top:50%;transform:translateY(-50%);left:0;right:0;text-align:center",left:"top:50%;transform:translateY(-50%);left:0;max-width:50%;text-align:left",right:"top:50%;transform:translateY(-50%);right:0;max-width:50%;text-align:right"}[q]||"bottom:14%;left:0;right:0;text-align:center");
 const fetchFol=async()=>(await sb.from("follows").select("follower_id,followed_id")).data||[];
-const VFSVG=`<svg class="vf" viewBox="0 0 24 24" width="16" height="16" aria-label="Verificado"><circle cx="12" cy="12" r="11" fill="#7c5cff"/><path d="m7 12.5 3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,VFN=100,vf=u=>nF(u)>=VFN?VFSVG:"";const nF=u=>fol.filter(x=>x.followed_id===u).length,isF=u=>fol.some(x=>x.followed_id===u&&x.follower_id===me.id);
+const ZSEAL=(n,c)=>`<svg class="${c||"seal"}" viewBox="0 0 24 24" width="${n}" height="${n}" aria-label="Conta verificada"><defs><linearGradient id="zsg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#63d2ff"/><stop offset=".55" stop-color="#1e7bff"/><stop offset="1" stop-color="#0b4fd6"/></linearGradient></defs><path d="M23.02,12.00 L22.89,12.71 L22.54,13.39 L22.10,14.01 L21.70,14.60 L21.45,15.21 L21.36,15.88 L21.36,16.61 L21.32,17.38 L21.13,18.10 L20.73,18.70 L20.13,19.13 L19.42,19.42 L18.71,19.65 L18.08,19.93 L17.56,20.33 L17.12,20.87 L16.67,21.48 L16.16,22.04 L15.54,22.44 L14.84,22.58 L14.09,22.50 L13.35,22.28 L12.66,22.06 L12.00,21.98 L11.34,22.06 L10.65,22.28 L9.91,22.50 L9.16,22.58 L8.46,22.44 L7.84,22.04 L7.33,21.48 L6.88,20.87 L6.44,20.33 L5.92,19.93 L5.29,19.65 L4.58,19.42 L3.87,19.13 L3.27,18.70 L2.87,18.10 L2.68,17.38 L2.64,16.61 L2.64,15.88 L2.55,15.21 L2.30,14.60 L1.90,14.01 L1.46,13.39 L1.11,12.71 L0.97,12.00 L1.11,11.29 L1.46,10.61 L1.90,9.99 L2.30,9.40 L2.55,8.79 L2.64,8.12 L2.64,7.39 L2.68,6.62 L2.87,5.90 L3.27,5.30 L3.87,4.87 L4.58,4.58 L5.29,4.35 L5.92,4.07 L6.44,3.67 L6.88,3.13 L7.33,2.52 L7.84,1.96 L8.46,1.56 L9.16,1.42 L9.91,1.50 L10.65,1.72 L11.34,1.94 L12.00,2.03 L12.66,1.94 L13.35,1.72 L14.09,1.50 L14.84,1.42 L15.54,1.56 L16.16,1.96 L16.67,2.52 L17.12,3.13 L17.56,3.67 L18.08,4.07 L18.71,4.35 L19.42,4.58 L20.13,4.87 L20.73,5.30 L21.13,5.90 L21.32,6.62 L21.36,7.39 L21.36,8.12 L21.45,8.79 L21.70,9.40 L22.10,9.99 L22.54,10.61 L22.89,11.29Z" fill="url(#zsg)"/><path d="M23.02,12.00 L22.89,12.71 L22.54,13.39 L22.10,14.01 L21.70,14.60 L21.45,15.21 L21.36,15.88 L21.36,16.61 L21.32,17.38 L21.13,18.10 L20.73,18.70 L20.13,19.13 L19.42,19.42 L18.71,19.65 L18.08,19.93 L17.56,20.33 L17.12,20.87 L16.67,21.48 L16.16,22.04 L15.54,22.44 L14.84,22.58 L14.09,22.50 L13.35,22.28 L12.66,22.06 L12.00,21.98 L11.34,22.06 L10.65,22.28 L9.91,22.50 L9.16,22.58 L8.46,22.44 L7.84,22.04 L7.33,21.48 L6.88,20.87 L6.44,20.33 L5.92,19.93 L5.29,19.65 L4.58,19.42 L3.87,19.13 L3.27,18.70 L2.87,18.10 L2.68,17.38 L2.64,16.61 L2.64,15.88 L2.55,15.21 L2.30,14.60 L1.90,14.01 L1.46,13.39 L1.11,12.71 L0.97,12.00 L1.11,11.29 L1.46,10.61 L1.90,9.99 L2.30,9.40 L2.55,8.79 L2.64,8.12 L2.64,7.39 L2.68,6.62 L2.87,5.90 L3.27,5.30 L3.87,4.87 L4.58,4.58 L5.29,4.35 L5.92,4.07 L6.44,3.67 L6.88,3.13 L7.33,2.52 L7.84,1.96 L8.46,1.56 L9.16,1.42 L9.91,1.50 L10.65,1.72 L11.34,1.94 L12.00,2.03 L12.66,1.94 L13.35,1.72 L14.09,1.50 L14.84,1.42 L15.54,1.56 L16.16,1.96 L16.67,2.52 L17.12,3.13 L17.56,3.67 L18.08,4.07 L18.71,4.35 L19.42,4.58 L20.13,4.87 L20.73,5.30 L21.13,5.90 L21.32,6.62 L21.36,7.39 L21.36,8.12 L21.45,8.79 L21.70,9.40 L22.10,9.99 L22.54,10.61 L22.89,11.29Z" fill="none" stroke="#ffffff55" stroke-width=".6"/><path d="M7.4 12.4l3.1 3.1 6.1-6.5" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const VFSVG=ZSEAL(18,"vf"),VFN=100,vf=u=>nF(u)>=VFN?VFSVG:"";const nF=u=>fol.filter(x=>x.followed_id===u).length,isF=u=>fol.some(x=>x.followed_id===u&&x.follower_id===me.id);
 const av=(p,z=36,u)=>`<span ${u?`data-a="up" data-i="${u}"`:""} style="display:inline-grid;place-items:center;flex:none;width:${z}px;height:${z}px;border-radius:50%;background:${p?.avatar_url?`url('${esc(p.avatar_url)}') center/cover`:"linear-gradient(135deg,var(--b),var(--a))"};font-weight:900;font-size:${Math.round(z*.45)}px;cursor:pointer">${p?.avatar_url?"":esc((p?.name||"?")[0].toUpperCase())}</span>`;
 const scm=async i=>{const r=await sb.from("story_comments").select("*").eq("story_id",i).order("created_at");if(r.data?.length){const pr=await sb.from("profiles").select("id,name").in("id",[...new Set(r.data.map(c=>c.author_id))]),m=Object.fromEntries((pr.data||[]).map(x=>[x.id,x]));r.data.forEach(c=>c.profiles=m[c.author_id])}return r};
 const EM={like:"👍",love:"❤️",care:"🥰",haha:"😂",wow:"😮",sad:"😢",angry:"😡",fire:"🔥",clap:"👏",pray:"🙏"},RL={like:"Gostar",love:"Adorar",care:"Carinho",haha:"Haha",wow:"Uau",sad:"Triste",angry:"Revolta",fire:"Fogo",clap:"Palmas",pray:"Força"};
@@ -251,29 +282,29 @@ function pfBadges(uid,nFol,ps,isMe,off){
  const top=nFol>=PF_TOP.followers||tv>=PF_TOP.views,viral=mv>=PF_VIRAL.views||ml>=PF_VIRAL.likes;
  return{top,viral,off:!!off,crown:top||!!off,html:`${off?'<span class="bdg f">✓ ZAMBA Oficial</span>':""}${viral?'<span class="bdg v">🔥 Viral</span>':""}${top?'<span class="bdg t">⭐ Top</span>':""}`}}
 function profHtml(uid,p0,nFol,nFing,fl,isMe){p0=p0||{};
- const ps=posts.filter(p=>p.author_id===uid),tv=ps.reduce((t,p)=>t+(stats[p.id]?.views||0),0),tl=ps.reduce((t,p)=>t+(stats[p.id]?.likes||0),0),off=pfOfficial(p0,isMe),bd=pfBadges(uid,nFol,ps,isMe,off);
+ const ps=posts.filter(p=>p.author_id===uid),tv=ps.reduce((t,p)=>t+(stats[p.id]?.views||0),0),tl=ps.reduce((t,p)=>t+(stats[p.id]?.likes||0),0),off=pfOfficial(p0,isMe),bd=pfBadges(uid,nFol,ps,isMe,off),seal=off||nFol>=VFN;
  const byNew=(x,y)=>new Date(y.created_at)-new Date(x.created_at),tb=profTab==="t"?"v":profTab,cv=p0.cover_url;
  const vids=ps.filter(p=>p.type!=="music"&&p.type!=="text"&&!(p.price_mt>0)).sort(byNew),mus=ps.filter(p=>p.type==="music").sort(byNew),shop=ps.filter(p=>p.price_mt>0&&p.type!=="music").sort(byNew);
  const lv=(typeof liveLives!=="undefined"&&!isMe)?liveLives[uid]:null;
- const bioRaw=p0.bio||"",tagsF=(bioRaw.match(/#[\p{L}\p{N}_]+/gu)||[]).slice(0,6),bioTxt=bioRaw.replace(/#[\p{L}\p{N}_]+/gu,"").replace(/[ \t]+/g," ").trim(),tags=tagsF.length?tagsF:(off?["#ZAMBA","#Inovação","#Música","#Moçambique"]:[]);
+ const bioRaw=p0.bio||"",tags=(bioRaw.match(/#[\p{L}\p{N}_]+/gu)||[]).slice(0,6),bioTxt=bioRaw.replace(/#[\p{L}\p{N}_]+/gu,"").replace(/[ \t]+/g," ").trim();
  const tile=p=>`<div class="pt" data-a="det" data-i="${p.id}" data-bg="${p.cover_url?`url('${esc(p.cover_url)}')`:"linear-gradient(135deg,#4c2fb8,#c2410c)"}"><span>▶ ${fmtN(stats[p.id]?.views||0)} · ❤ ${fmtN(stats[p.id]?.likes||0)}</span>${p.type==="music"?"<i>♪ Música</i>":p.price_mt>0?`<i>🛒 ${p.price_mt} MT</i>`:""}</div>`;
  const empty=m=>`<div class="mu" style="grid-column:1/-1;padding:14px">${m}</div>`;
  let body;
- if(tb==="l")body=`<div class="box" style="margin:8px 4px"><b>🔴 Transmissões ao vivo</b>${isMe?`<p class="mu">Faz Live, recebe presentes e desafia outros criadores em batalhas.</p><button class="lvb" data-lv="start" style="width:100%;padding:13px;border-radius:14px;font-weight:800">🔴 Ir ao vivo</button>`:lv?`<p class="mu">${esc(p0.name||"")} está ao vivo: <b>${esc(lv.title||"Live")}</b></p><button class="lvb" data-lv="watch" data-host="${esc(uid)}" style="width:100%;padding:13px;border-radius:14px;font-weight:800">▶ Assistir agora</button>`:`<p class="mu">Sem Live neste momento. Segue esta conta para receberes o aviso quando entrar ao vivo.</p>`}</div>`;
+ if(tb==="l")body=`<div class="box" style="margin:8px 4px"><b>🔴 Transmissões ao vivo</b>${isMe?`<p class="mu">Faz Live, recebe presentes e desafia outros criadores em batalhas.</p><button class="lvb" data-lv="start" style="width:100%;padding:11px;border-radius:12px;font-weight:800">🔴 Ir ao vivo</button>`:lv?`<p class="mu">${esc(p0.name||"")} está ao vivo: <b>${esc(lv.title||"Live")}</b></p><button class="lvb" data-lv="watch" data-host="${esc(uid)}" style="width:100%;padding:11px;border-radius:12px;font-weight:800">▶ Assistir agora</button>`:`<p class="mu">Sem Live neste momento. Segue esta conta para saberes quando entrar ao vivo.</p>`}</div>`;
  else{const L=tb==="m"?mus:tb==="p"?shop:vids;body=`<div class="pg">${L.map(tile).join("")||empty(tb==="m"?"Ainda sem músicas.":tb==="p"?"Ainda sem produtos na loja.":(isMe?"Ainda não publicaste. Toca em Publicar para começar.":"Ainda sem vídeos."))}</div>`}
  const brand=`<div class="pfbrand"><img src="${ZL}" alt=""><div><div class="pfbw">ZAMBA</div><div class="pfbs">Conecta • Cria • Vende • Cresce</div></div><span class="pfnt a">♪</span><span class="pfnt b">♫</span><span class="pfnt c">♪</span></div>`;
  const T=[["v","▶ Vídeos"],["m","♪ Música"],["p","🛒 Loja"],["l","● LIVE"]];
- return`<div class="pf"><div class="pfb" ${isMe?'data-a="setcv"':""} style="background:${cv?`url('${esc(cv)}') center/cover`:off?"linear-gradient(135deg,#12062e,#4b1a9c 55%,#b01fd0)":"linear-gradient(135deg,#7c5cff,#ff4d9a 60%,#ff7a59)"}">${cv?"":off?brand:`<div class="pfq">Criar.<br>Partilhar.<br>Vender. <i>Crescer.</i></div>`}${isMe?'<span class="pfedit">📷 Capa</span>':`<button class="ib" data-a="x" aria-label="Fechar" style="position:absolute;top:8px;right:8px;background:#000a!important">✕</button>`}</div>
- <div class="pfr"><span class="pfa${lv?" live":""}" ${isMe?'data-a="setav"':""}>${av(p0,100)}${isMe?'<i class="pfcam">📷</i>':""}${lv?'<b class="pflive">AO VIVO</b>':""}</span></div>
- <div class="pfn">${bd.crown?'<span class="pfc">👑</span>':""}<span>${esc(p0.name||"")}</span>${off?'<span class="pfv">✔</span>':vf(uid)}</div><div class="pfbd">${bd.html}</div><div class="mu" style="margin:6px 8px 0">@${esc(slug(p0.name))}</div>
+ return`<div class="pf"><div class="pfb" ${isMe?'data-a="setcv"':""} style="background:${cv?`url('${esc(cv)}') center/cover`:off?"linear-gradient(135deg,#12062e,#4b1a9c 55%,#b01fd0)":"linear-gradient(135deg,#7c5cff,#ff4d9a 60%,#ff7a59)"}">${cv?"":off?brand:`<div class="pfq">Criar.<br>Partilhar.<br>Vender. <i>Crescer.</i></div>`}${isMe?'<span class="pfedit">📷 Capa</span>':""}</div>${isMe?"":`<button class="pfx" data-a="x" aria-label="Fechar">✕</button>`}
+ <div class="pfhead"><span class="pfa${lv?" live":""}" ${isMe?'data-a="setav"':""}>${av(p0,92)}${isMe?'<i class="pfcam">📷</i>':seal?`<span class="pfavs">${ZSEAL(24)}</span>`:""}${lv?'<b class="pflive">AO VIVO</b>':""}</span>
+  <div class="pfinfo"><div class="pfn">${bd.crown?'<span class="pfc">👑</span>':""}<span class="pfname">${esc(p0.name||"")}</span>${seal?ZSEAL(22):""}</div><div class="pfbd">${bd.html}</div><div class="pfat">@${esc(slug(p0.name))}</div></div></div>
  ${bioTxt?`<div class="pfbio">${esc(bioTxt)}</div>`:isMe?`<div class="pfbio mu" data-a="pedit" style="cursor:pointer">＋ Adiciona uma descrição ao teu perfil</div>`:""}
  ${tags.length?`<div class="pftags">${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>`:""}
- ${off?`<div class="pfsl"><span>Do Rovuma ao Índico, para o mundo. 🌍</span></div>`:`<div class="mu" style="margin:4px 8px">📍 ${esc(p0.province||"Moçambique")}${p0.title?" · "+esc(p0.title):""}</div>`}
+ ${off?"":`<div class="mu" style="margin:4px 10px;font-size:13px">📍 ${esc(p0.province||"Moçambique")}${p0.title?" · "+esc(p0.title):""}</div>`}
  <div class="pfst"><div><i>👁</i><b>${fmtN(tv)}</b><small>Visualizações</small></div><div data-a="flist" data-i="${uid}|followers" style="cursor:pointer"><i>👥</i><b>${fmtN(nFol)}</b><small>Seguidores</small></div><div><i>❤️</i><b>${fmtN(tl)}</b><small>Gostos</small></div><div data-a="flist" data-i="${uid}|following" style="cursor:pointer"><i>➕</i><b>${fmtN(nFing)}</b><small>A seguir</small></div></div>
  <div class="pfact">${isMe?`<button class="g" data-a="pedit">✏️ Editar Perfil</button><button class="pfs" data-t="studio">👑 ZAMBA Studio</button><button class="pfcta full" data-t="new"><span>🚀</span><i>Criar Conteúdo, Fazer a Diferença!</i><b>›</b></button>`:`<button data-a="tf" data-i="${uid}">${fl?"A seguir ✓":"Seguir"}</button><button class="g" data-a="dmx" data-i="${uid}">Mensagem</button>${lv?`<button class="lvb full" data-lv="watch" data-host="${esc(uid)}">🔴 Assistir Live agora</button>`:""}`}</div>
  <div class="pft">${T.map(t=>`<button class="${tb===t[0]?"":"g"}${t[0]==="l"?" lvt":""}" data-a="ptab" data-i="${t[0]}">${t[1]}</button>`).join("")}</div>${body}</div>`}
 
-function profOverlay(d){const[u,p,a,b,f]=profCtx;d.innerHTML=`<div style="width:100%;min-width:0">${profHtml(u,p,a,b,f,false)}</div>`;return true}
+function profOverlay(d){const[u,p,a,b,f]=profCtx;d.innerHTML=`<div class="pfov">${profHtml(u,p,a,b,f,false)}</div>`;return true}
 const editInner=()=>`<button class="g" data-a="invite" style="width:100%;margin:8px 0">📨 Convidar amigos para a ZAMBA</button><label>Foto de perfil</label><input id="pav" type="file" accept="image/*"><label>Nome</label><input id="pn" value="${esc(prof?.name)}"><label>Número M-Pesa/e-Mola para receber (vendedores)</label><input id="pph" value="${esc(prof?.payout_phone||"")}" placeholder="84 000 0000"><label>Sobre mim</label><textarea id="pbio">${esc(prof?.bio||"")}</textarea><div style="margin-top:10px"><button data-a="prof">Guardar</button></div>`;
 function roleBox(){const r=prof?.account_type||"customer",n=nF(me.id),ok=n>=VFN,nm=(ROLES.find(x=>x[0]===r)||[0,r])[1];
  return`<div class="box"><div class="row"><b>Ferramentas de ${esc(nm.toLowerCase())}</b>${ok?`<span style="display:inline-flex;align-items:center;font-weight:700">${VFSVG} Verificado</span>`:""}</div>${ok?`<div class="mu" style="margin:6px 0">A tua conta tem o selo oficial de verificação.</div>`:`<div class="mu" style="margin:8px 0 4px">${n} de ${VFN} seguidores para o selo de verificado</div><div style="height:8px;border-radius:6px;background:var(--p2)"><div style="height:8px;border-radius:6px;width:${Math.min(100,n/VFN*100)}%;background:linear-gradient(90deg,var(--b),var(--a))"></div></div>`}<div class="tg" style="margin-top:12px">${(RT[r]||RT.customer).map(t=>`<button class="g" data-a="rtool" data-i="${t[1]}">${t[0]}</button>`).join("")}</div></div>`}
