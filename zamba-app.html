@@ -240,6 +240,34 @@ body{background:radial-gradient(circle at 85% -8%,#5b2fd180,transparent 48%),rad
 .lvn{display:block;margin-top:6px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lvc small{display:block;color:var(--mu);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
+<style id="zinbox">
+.pfhead .pfa{display:grid!important;place-items:center;width:100px;height:100px;padding:4px;border-radius:50%;flex:none;position:relative}
+.pfhead .pfa>span:first-child{width:92px!important;height:92px!important;border-radius:50%;overflow:hidden}
+.pfb .pfq{position:absolute;right:16px;top:14px;text-align:right;font-size:17px;line-height:1.15;max-width:55%}
+.pfst{border:0!important;background:none!important;padding:0!important;box-shadow:none!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;margin:12px 8px!important}
+.pfcta{padding:6px 12px!important;min-height:0!important;border-radius:12px!important}
+.pfcta span{font-size:16px!important}.pfcta i{font-size:13px!important}.pfcta b{font-size:16px!important}
+.inb{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:linear-gradient(120deg,#3b1d8f,#7c2fd0);border:1px solid #b69bff;margin-bottom:10px;cursor:pointer}
+.inb small{display:block;color:#e6dcff;font-size:12px}
+.cqi{width:100%;margin:0 0 6px;border-radius:14px}
+.cvr{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #2c2260;cursor:pointer}
+.dfg .cvr:last-child{border-bottom:0}
+.cvx{flex:1;min-width:0}
+.cvn{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cvp{color:var(--mu);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.cvp.un{color:var(--tx);font-weight:700}
+.cvb{flex:none;width:10px;height:10px;border-radius:50%;background:#e5485d;box-shadow:0 0 8px #e5485d}
+.chh{display:flex;align-items:center;gap:10px;padding:6px 0 10px;position:sticky;top:0;z-index:5;background:linear-gradient(var(--bg) 80%,transparent)}
+.chm{display:flex;flex-direction:column;gap:6px;padding:6px 0 90px}
+.chd{align-self:center;font-size:11px;color:var(--mu);margin:8px 0 2px;text-transform:capitalize}
+.chb{display:flex;flex-direction:column;max-width:82%;align-self:flex-start}
+.chb.me{align-self:flex-end;align-items:flex-end}
+.chb span{background:var(--p2);border:1px solid var(--ln);padding:9px 13px;border-radius:16px 16px 16px 4px;line-height:1.38;overflow-wrap:anywhere}
+.chb.me span{background:linear-gradient(135deg,#7c5cff,#c026d3);border:0;color:#fff;border-radius:16px 16px 4px 16px}
+.chb small{font-size:10px;color:var(--mu);margin:2px 4px}
+.chi{position:sticky;bottom:84px;display:flex;gap:8px;padding:8px;background:#0b0718f2;border:1px solid var(--ln);border-radius:20px;z-index:5}
+.chi input{flex:1;margin:0;border-radius:14px}
+</style>
 </head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
@@ -268,7 +296,7 @@ function introView(){
  if(istep===1)return`<div class="cover"><h2>Tudo numa só rede</h2><div class="adv">${[[IC.play,"Publica em segundos","Vídeos, músicas, stories e produtos direto da galeria."],[IC.play,"Transmite ao vivo","Faz Live com chat, reações e presentes para o teu público."],[IC.bag,"Vende com confiança","Mercado local, pagamentos móveis e encomendas organizadas."],[IC.book,"Aprende e cresce","Cursos, e-books e comunidade de criadores."],[IC.user,"Aberta a todas as pessoas","Sem discriminação. Feita em Moçambique para o mundo."]].map(f=>`<div class="af"><span class="ai">${f[0]}</span><div><b>${f[1]}</b><span>${f[2]}</span></div></div>`).join("")}</div><button data-a="inext">Continuar</button></div>`;
  return`<div class="cover"><h2>O que gostas de ver?</h2><p>Escolhe o que quiseres: vamos personalizar o teu início.</p><div class="chipsgrid">${INTERESTS.map(x=>`<button class="${picks.includes(x[0])?"":"g"}" data-a="pick" data-i="${x[0]}">${x[1]} ${x[0]}</button>`).join("")}</div><button data-a="idone">Entrar na ZAMBA</button></div>`}
 async function boot(){if(!ok){$("#root").innerHTML=`<div class="auth"><div class="logo" style="font-size:40px">✦ ZAMBA</div><div class="box"><b>Falta ligar a base de dados</b><p class="mu">Abre este ficheiro num editor de texto e, no topo do código, cola a URL do projeto e a chave pública (anon) do Supabase. Depois grava e abre outra vez.</p></div></div>`;return}
- sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data}=await sb.auth.getSession();me=data.session?.user||null;sb.auth.onAuthStateChange((_e,s)=>{const n=s?.user||null;if((n&&n.id)!==(me&&me.id)){me=n;start()}});await start()}
+ sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data}=await sb.auth.getSession();me=data.session?.user||null;sb.auth.onAuthStateChange((_e,s)=>{const n=s?.user||null;if((n&&n.id)!==(me&&me.id)){resetUi();me=n;start()}});await start()}
 const KPI=d=>[["contas",d.users],["novas hoje",d.new_today],["ativos hoje",d.dau_today],["ativos em 7 dias",d.dau_7d],["publicações",d.posts],["visualizações",d.views],["pessoas que viram",d.viewers],["gostos",d.likes],["comentários",d.comments],["seguidores",d.follows],["stories ativos",d.stories],["gostos nos stories",d.story_likes],["comentários nos stories",d.story_comments],["compras pagas",d.paid],["receita",mt(d.revenue||0)],["comissão",mt(d.commission||0)],["denúncias",d.reports]].map(x=>`<div><b>${x[1]??0}</b>${x[0]}</div>`).join("");
 async function adminStats(){try{const[a,o]=await Promise.all([sb.rpc("admin_stats"),sb.from("orders").select("status,order_items(price_mt,commission_mt)")]);if(a.error){toast("Painel: "+a.error.message);return}const ps=(o.data||[]).filter(x=>["paid","delivered"].includes(x.status)),it=ps.flatMap(x=>x.order_items||[]);adminData={...a.data,paid:ps.length,revenue:it.reduce((t,x)=>t+Number(x.price_mt||0),0),commission:it.reduce((t,x)=>t+Number(x.commission_mt||0),0)}}catch(e){toast("Painel: "+(e.message||e))}}
 let fol=[],seen=new Set(),rxs=[];
@@ -621,10 +649,36 @@ async function detail(id){const p=posts.find(x=>x.id===id);if(!p)return;await sb
  let d=$("#md");if(!d){d=document.createElement("div");d.id="md";document.body.appendChild(d)}
  d.innerHTML=`<div class="box"><div style="position:sticky;top:-16px;z-index:5;background:var(--p);margin:-16px -16px 0;padding:12px 16px 8px"><div class="row"><b>${esc(p.title)}</b><button class="g" data-a="x">✕</button></div>${m.startsWith("video")||m.startsWith("audio")?media:""}</div>${p.cover_url&&!m.startsWith("video")?`<img class="m" src="${esc(p.cover_url)}" style="max-height:260px;object-fit:cover">`:""}${m.startsWith("video")||m.startsWith("audio")?"":media}<div class="mu">${TYPES[p.type]} · ${av(p.profiles,26,p.author_id)} <b data-a="up" data-i="${p.author_id}" style="cursor:pointer">${esc(p.profiles?.name||"")}</b>${vf(p.author_id)} · ${sg(nF(p.author_id))} · ${new Date(p.created_at).toLocaleDateString("pt-PT")}</div><p style="margin:8px 0">${p.subtitle?`<b>${esc(p.subtitle)}</b><br>`:""}${esc(p.description||"")}</p>${paid?`<div class="note">Conteúdo pago: ${mt(p.price_mt)}.</div><button data-a="cart" data-i="${id}">🛒 Adicionar ao carrinho</button>`:""}<div class="acts">${rxBtn(id)}<button class="ib" data-a="share" data-i="${id}" aria-label="Partilhar">${IC.s}</button>${p.author_id!==me.id?`<button class="ib" data-a="gift" data-i="${id}" aria-label="Enviar presente">${STAR}</button>`:""}<button class="g" data-a="rep" data-i="${id}">⚑ Denunciar</button></div><div data-a="cmopen" style="background:var(--p2);border:1px solid var(--ln);border-radius:14px;padding:12px;margin:8px 0;cursor:pointer"><b>💬 Comentários · ${(cm.data||[]).length}</b><div class="mu" style="margin-top:6px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${(()=>{const c=(cm.data||[]).slice(-1)[0];return c?esc(c.profiles?.name||"")+": "+esc(c.body):"Sê a primeira pessoa a comentar"})()}</div></div><div id="cmSheet" class="cm-sheet"><div class="row"><b>💬 Comentários · ${(cm.data||[]).length}</b><button class="g" data-a="cmclose">✕</button></div><div style="flex:1;overflow-y:auto;margin:8px 0">${cmHtml(cm.data||[])}</div><div class="row" style="flex-wrap:nowrap"><input id="ci" style="flex:1;margin:0" placeholder="Escreve um comentário…"><button data-a="send" data-i="${id}">Enviar</button></div></div>${related(p)}</div>`}
 let people=[],msgs=[],assist={},cw=null;
-async function loadChat(){const[a,b,c]=await Promise.all([sb.from("profiles").select("id,name").neq("id",me.id).order("name"),sb.from("messages").select("*").or(`sender_id.eq.${me.id},receiver_id.eq.${me.id}`).order("created_at"),sb.from("assistants").select("user_id,instructions").eq("enabled",true)]);people=a.data||[];msgs=b.data||[];assist=Object.fromEntries((c.data||[]).map(x=>[x.user_id,x.instructions]))}
-V.chat=function(){if(cw){const p=people.find(x=>x.id===cw)||{name:"Conta"},ms=msgs.filter(m=>(m.sender_id===me.id&&m.receiver_id===cw)||(m.sender_id===cw&&m.receiver_id===me.id)),last=ms[ms.length-1],bot=assist[cw]&&last&&last.sender_id===me.id;
- return`<div class="box"><div class="row"><b>${esc(p.name)}</b><button class="g" data-a="back">←</button></div>${ms.map(m=>`<div style="margin:8px 0;text-align:${m.sender_id===me.id?"right":"left"}"><span style="display:inline-block;background:var(--p2);padding:8px 12px;border-radius:12px;max-width:85%;text-align:left">${msgBody(m)}</span><div class="mu">${new Date(m.created_at).toLocaleString("pt-PT")}</div></div>`).join("")||`<div class="mu">Começa a conversa.</div>`}${bot?`<div style="margin:8px 0"><span style="display:inline-block;background:#2fd4c022;border:1px solid var(--c);padding:8px 12px;border-radius:12px;max-width:85%"><b>🤖 Assistente de ${esc(p.name)}:</b> ${esc(assist[cw])}<div class="mu">${esc(p.name)} responde quando estiver online.</div></span></div>`:""}<div class="row" style="margin-top:10px"><input id="mi" style="flex:1" placeholder="Mensagem…"><button data-a="msg">Enviar</button></div></div>`}
- return`<h2>Mensagens</h2>${people.map(u=>`<div class="box row"><span>${esc(u.name)}</span><button data-a="open" data-i="${u.id}">Conversar</button></div>`).join("")||`<div class="empty">Ainda não há outras contas.</div>`}`};
+
+function resetUi(){
+ try{closeLiveStudio()}catch(e){}
+ ["md","mm","sqm","gm","tourModal","liveNotif","cmSheet"].forEach(id=>document.getElementById(id)?.remove());
+ document.querySelectorAll(".t-modal,.cm-sheet,.lv-notif").forEach(x=>x.remove());
+ [()=>{tab="feed"},()=>{cw=null},()=>{profTab="t"},()=>{adminData=null},()=>{feedQ=""},()=>{chatQ=""},()=>{tourState=null;tourAt=0},()=>{walletRows=null;walletAt=0},()=>{liveRankRows=null;liveRankAt=0},()=>{adminGiftsAt=0},()=>{liveTourMine=[]},()=>{liveSrv={};livePres={};liveLives={};liveSeen=new Set()}].forEach(f=>{try{f()}catch(e){}});
+ try{scrollTo(0,0)}catch(e){}}
+async function loadChat(){const[a,b,c]=await Promise.all([sb.from("profiles").select("id,name,avatar_url").neq("id",me.id).order("name"),sb.from("messages").select("*").or(`sender_id.eq.${me.id},receiver_id.eq.${me.id}`).order("created_at"),sb.from("assistants").select("user_id,instructions").eq("enabled",true)]);people=a.data||[];msgs=b.data||[];assist=Object.fromEntries((c.data||[]).map(x=>[x.user_id,x.instructions]))}
+let chatQ="";
+const rdKey=()=>"zb_rd_"+(me?.id||""),getRd=()=>{try{return JSON.parse(localStorage.getItem(rdKey())||"{}")}catch(e){return{}}},markRd=id=>{try{const m=getRd();m[id]=Date.now();localStorage.setItem(rdKey(),JSON.stringify(m))}catch(e){}};
+const chatTime=iso=>{const d=new Date(iso),n=new Date(),dd=Math.floor((new Date(n.getFullYear(),n.getMonth(),n.getDate())-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);return dd<=0?d.toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"}):dd===1?"Ontem":d.toLocaleDateString("pt-PT",{day:"2-digit",month:"2-digit"})};
+const chatPrev=m=>{let t=(m.body||"").replace(/#post:[0-9a-f-]{36}/g,"📎 Publicação").trim()||"📎 Publicação";return(m.sender_id===me.id?"Tu: ":m.is_bot?"🤖 ":"")+t};
+function chatListHtml(){
+ const q=(chatQ||"").trim().toLowerCase(),rd=getRd(),map=new Map();
+ msgs.forEach(m=>{const o=m.sender_id===me.id?m.receiver_id:m.sender_id,c=map.get(o);if(!c||new Date(m.created_at)>new Date(c.created_at))map.set(o,m)});
+ const hit=p=>!q||(p.name||"").toLowerCase().includes(q);
+ const conv=[...map].map(([id,m])=>({id,m,p:people.find(x=>x.id===id)||{id,name:"Conta"}})).filter(x=>hit(x.p)).sort((a,b)=>new Date(b.m.created_at)-new Date(a.m.created_at));
+ const others=people.filter(p=>!map.has(p.id)&&hit(p)).slice(0,30);
+ const cr=x=>{const un=x.m.sender_id!==me.id&&new Date(x.m.created_at).getTime()>(rd[x.id]||0);return`<div class="cvr" data-a="open" data-i="${x.id}">${av(x.p,50)}<div class="cvx"><div class="row" style="flex-wrap:nowrap;gap:8px"><b class="cvn">${esc(x.p.name||"")}</b><small class="mu" style="flex:none">${chatTime(x.m.created_at)}</small></div><div class="cvp${un?" un":""}">${esc(chatPrev(x.m))}</div></div>${un?'<i class="cvb"></i>':""}</div>`};
+ const pr=p=>`<div class="cvr" data-a="open" data-i="${p.id}">${av(p,50)}<div class="cvx"><b class="cvn">${esc(p.name||"")}</b><div class="cvp">Toca para conversar</div></div><span class="dfch">›</span></div>`;
+ return(conv.length?`<div class="dft">Conversas</div><div class="dfg">${conv.map(cr).join("")}</div>`:"")+(others.length?`<div class="dft">Pessoas na ZAMBA</div><div class="dfg">${others.map(pr).join("")}</div>`:"")||`<div class="empty">${q?"Ninguém encontrado.":"Ainda não há outras contas."}</div>`}
+document.addEventListener("input",e=>{if(e.target.id==="cq"){chatQ=e.target.value;const el=document.getElementById("chatList");if(el)el.innerHTML=chatListHtml()}});
+V.chat=function(){
+ if(cw){
+  markRd(cw);
+  const p=people.find(x=>x.id===cw)||{name:"Conta"},ms=msgs.filter(m=>(m.sender_id===me.id&&m.receiver_id===cw)||(m.sender_id===cw&&m.receiver_id===me.id)),last=ms[ms.length-1],bot=assist[cw]&&last&&last.sender_id===me.id;
+  let day="";
+  const bub=ms.map(m=>{const d=new Date(m.created_at).toLocaleDateString("pt-PT",{day:"2-digit",month:"long"});const sep=d!==day?`<div class="chd">${d}</div>`:"";day=d;return sep+`<div class="chb${m.sender_id===me.id?" me":""}"><span>${msgBody(m)}</span><small>${new Date(m.created_at).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}</small></div>`}).join("");
+  return`<div class="chh"><button class="g" data-a="back" aria-label="Voltar">←</button>${av(p,42)}<div style="flex:1;min-width:0"><b style="font-size:17px">${esc(p.name||"")}</b><div class="mu" style="font-size:12px">${assist[cw]?"🤖 Assistente ativo":"Conversa privada"}</div></div></div><div class="chm">${bub||`<div class="mu" style="text-align:center;margin:24px 0">Começa a conversa com ${esc(p.name||"")}.</div>`}${bot?`<div class="chb"><span style="background:#2fd4c022;border:1px solid var(--c)"><b>🤖 Assistente de ${esc(p.name)}:</b> ${esc(assist[cw])}</span><small>${esc(p.name)} responde quando estiver online.</small></div>`:""}</div><div class="chi"><input id="mi" placeholder="Escreve uma mensagem…"><button data-a="msg">Enviar</button></div>`}
+ return`<div class="row" style="margin-bottom:10px"><h2 style="margin:0">Mensagens</h2></div><div class="inb" data-a="bell"><span class="dfic">🔔</span><div style="flex:1;min-width:0"><b>Notificações</b><small>Novos seguidores, comentários e atividade</small></div><span class="dfch">›</span></div><input id="cq" class="cqi" placeholder="Procurar pessoas e conversas…" value="${esc(chatQ||"")}"><div id="chatList">${chatListHtml()}</div>`};
 let cart=(()=>{try{return JSON.parse(localStorage.getItem("zb_cart")||"[]")}catch(e){return[]}})(),myOrders=[],allOrders=[],sales=[],payInfo="";
 const saveCart=()=>localStorage.setItem("zb_cart",JSON.stringify(cart));
 const bought=id=>myOrders.some(o=>["paid","delivered"].includes(o.status)&&(o.order_items||[]).some(i=>i.post_id===id));
