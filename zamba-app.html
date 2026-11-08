@@ -268,6 +268,18 @@ body{background:radial-gradient(circle at 85% -8%,#5b2fd180,transparent 48%),rad
 .chi{position:sticky;bottom:84px;display:flex;gap:8px;padding:8px;background:#0b0718f2;border:1px solid var(--ln);border-radius:20px;z-index:5}
 .chi input{flex:1;margin:0;border-radius:14px}
 </style>
+<style id="znot">
+.ntk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0 12px}
+.ntk>div{background:linear-gradient(160deg,#2f2270,#1b1438);border:1px solid #6a52d0aa;border-radius:14px;padding:8px 2px;text-align:center}
+.ntk i{display:block;font-style:normal;font-size:15px}
+.ntk b{display:block;font-size:17px;font-weight:900}
+.ntk small{font-size:10px;color:var(--mu)}
+.nti{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;margin:6px 0;background:var(--p2);border:1px solid var(--ln)}
+.nti.ntn{background:linear-gradient(90deg,#3b1d8f66,var(--p2));border-left:3px solid #b69bff}
+.ntx{flex:1;min-width:0;line-height:1.35;font-size:14px}
+.ntb{padding:5px 12px;font-size:13px;flex:none}
+.ntok{font-size:12px;color:var(--mu);flex:none}
+</style>
 </head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
@@ -333,7 +345,7 @@ async function load(){const q=(t)=>t;const[p,s,st,ml,ad,sv,rx]=await Promise.all
  posts=p.data||[];fol=await fetchFol();seen=new Set((sv.data||[]).map(x=>x.story_id));rxs=rx.data||[];await signFree();stories=s.data||[];if(s.error)toast("Stories: "+s.error.message);if(stories.length){const pr=await sb.from("profiles").select("id,name,avatar_url").in("id",[...new Set(stories.map(x=>x.author_id))]),pm=Object.fromEntries((pr.data||[]).map(x=>[x.id,x]));stories.forEach(x=>x.profiles=pm[x.author_id])}stats=Object.fromEntries((st.data||[]).map(x=>[x.post_id,x]));likedSet=new Set((ml.data||[]).map(x=>x.post_id));isAdm=!!(ad.data&&ad.data.length);if(p.error)toast("Erro a carregar: "+p.error.message);await loadChat();await loadOrders();await signFree();await loadCoins();sb.from("daily_active").upsert({user_id:me.id},{ignoreDuplicates:true}).then(()=>{});if(isAdm)await adminStats()}
 function render(){const root=$("#root");if(!ok)return;if(!me&&!localStorage.getItem("zb_onb")){root.innerHTML=introView();return}if(!me){root.innerHTML=authView();return}if(localStorage.getItem("zb_new")){root.innerHTML=introView();return}
  const nav=[["feed",IC.home,"Início"],["shorts",IC.play,"Curtos"],["new","＋","Publicar"],["chat",IC.chat,"Mensagens"],["me",IC.user,"Perfil"]].concat(isAdm?[["adm","👑","Admin"]]:[]);
- root.innerHTML=`<div class="row" style="padding:4px 0 10px"><div class="logo" style="display:flex;align-items:center;gap:8px"><img src="${ZL}" style="width:30px;height:30px;border-radius:8px">ZAMBA</div><div class="row">${isAdm?'<span class="mu">admin</span>':""}<button class="g live-nav" data-t="live">● LIVE</button><button class="ib" data-t="exp" aria-label="Explorar">${IC.compass}</button><button class="g" id="bellb" data-a="bell">🔔${bellN?" "+bellN:""}</button><button class="g" data-a="cartv">🛒 ${cart.length}</button><button class="ib" data-a="more" aria-label="Mais">${IC.dots}</button></div></div><div id="app"></div><div class="bot">${nav.map(b=>`<button class="${tab===b[0]?"on":""}" data-t="${b[0]}"><span>${b[1]}</span>${b[2]}</button>`).join("")}</div>`;
+ root.innerHTML=`<div class="row" style="padding:4px 0 10px"><div class="logo" style="display:flex;align-items:center;gap:8px"><img src="${ZL}" style="width:30px;height:30px;border-radius:8px">ZAMBA</div><div class="row">${isAdm?'<span class="mu">admin</span>':""}<button class="g live-nav" data-t="live">● LIVE</button><button class="ib" data-t="exp" aria-label="Explorar">${IC.compass}</button><button class="g" id="bellb" data-a="bell">🔔${(bellN+ntNew)?" "+(bellN+ntNew):""}</button><button class="g" data-a="cartv">🛒 ${cart.length}</button><button class="ib" data-a="more" aria-label="Mais">${IC.dots}</button></div></div><div id="app"></div><div class="bot">${nav.map(b=>`<button class="${tab===b[0]?"on":""}" data-t="${b[0]}"><span>${b[1]}</span>${b[2]}</button>`).join("")}</div>`;
  $("#app").innerHTML=(V[tab]||V.feed)()}
 function authView(){const up=authTab==="up";return`<div class="auth"><div class="logo" style="font-size:40px">✦ ZAMBA</div><div class="mu">Aprende. Cria. Vende. Cresce.</div><div class="box"><div class="row"><button class="${up?"g":""}" data-a="atab" data-i="in">Entrar</button><button class="${up?"":"g"}" data-a="atab" data-i="up">Criar conta</button></div>
  ${up?`<label>Nome</label><input id="an">`:""}<label>Email</label><input id="ae" type="email" autocomplete="email"><label>Palavra-passe (mínimo 8)</label><input id="ap" type="password">
@@ -654,8 +666,54 @@ function resetUi(){
  try{closeLiveStudio()}catch(e){}
  ["md","mm","sqm","gm","tourModal","liveNotif","cmSheet"].forEach(id=>document.getElementById(id)?.remove());
  document.querySelectorAll(".t-modal,.cm-sheet,.lv-notif").forEach(x=>x.remove());
- [()=>{tab="feed"},()=>{cw=null},()=>{profTab="t"},()=>{adminData=null},()=>{feedQ=""},()=>{chatQ=""},()=>{tourState=null;tourAt=0},()=>{walletRows=null;walletAt=0},()=>{liveRankRows=null;liveRankAt=0},()=>{adminGiftsAt=0},()=>{liveTourMine=[]},()=>{liveSrv={};livePres={};liveLives={};liveSeen=new Set()}].forEach(f=>{try{f()}catch(e){}});
+ [()=>{tab="feed"},()=>{cw=null},()=>{profTab="t"},()=>{adminData=null},()=>{feedQ=""},()=>{chatQ=""},()=>{tourState=null;tourAt=0},()=>{walletRows=null;walletAt=0},()=>{liveRankRows=null;liveRankAt=0},()=>{adminGiftsAt=0},()=>{ntEv=null;ntAt=0;ntNew=0;ntTab="all";ntNames={}},()=>{liveTourMine=[]},()=>{ntEv=null;ntNames={};ntTab="all";ntNew=0;ntAt=0},()=>{bellN=0},()=>{window.__liveSig=""},()=>{liveSrv={};livePres={};liveLives={};liveSeen=new Set()}].forEach(f=>{try{f()}catch(e){}});
  try{scrollTo(0,0)}catch(e){}}
+
+let ntEv=null,ntAt=0,ntTab="all",ntPrev=0,ntNew=0,ntNames={};
+const ntSeen=()=>{try{return Number(localStorage.getItem("zb_nt_"+(me?.id||""))||0)}catch(e){return 0}};
+function ntBell(){const b=document.getElementById("bellb");if(b){const n=bellN+ntNew;b.textContent="🔔"+(n?" "+n:"")}}
+async function ntLoad(force){
+ if(!me||!sb)return;if(!force&&Date.now()-ntAt<45000)return;ntAt=Date.now();
+ const my=posts.filter(p=>p.author_id===me.id),ids=my.map(p=>p.id);
+ try{
+  const[cr,fr,rr,gr]=await Promise.all([
+   ids.length?sb.from("comments").select("id,post_id,author_id,body,created_at").in("post_id",ids).neq("author_id",me.id).order("created_at",{ascending:false}).limit(40):{data:[]},
+   sb.from("follows").select("*").eq("followed_id",me.id).order("created_at",{ascending:false}).limit(40),
+   ids.length?sb.from("reactions").select("post_id,user_id,kind,created_at").in("post_id",ids).neq("user_id",me.id).order("created_at",{ascending:false}).limit(60):{data:[]},
+   sb.from("live_gifts").select("sender_id,gift_id,coins,created_at").eq("recipient_id",me.id).order("created_at",{ascending:false}).limit(30)]);
+  let rd=rr.data||[];if(rr.error)rd=rxs.filter(x=>ids.includes(x.post_id)&&x.user_id!==me.id).map(x=>({...x,created_at:null}));
+  const ev=[];
+  (cr.data||[]).forEach(c=>ev.push({k:"c",t:+new Date(c.created_at),u:c.author_id,post:c.post_id,body:c.body}));
+  (fr.data||[]).forEach(x=>ev.push({k:"f",t:x.created_at?+new Date(x.created_at):0,u:x.follower_id}));
+  rd.filter(x=>x.kind!=="dislike").forEach(x=>ev.push({k:"r",t:x.created_at?+new Date(x.created_at):0,u:x.user_id,post:x.post_id,kind:x.kind}));
+  (gr.data||[]).forEach(g=>ev.push({k:"g",t:+new Date(g.created_at),u:g.sender_id,gift:g.gift_id,coins:g.coins}));
+  ev.sort((a,b)=>b.t-a.t);ntEv=ev.slice(0,80);
+  const miss=[...new Set(ntEv.map(e=>e.u))].filter(id=>!ntNames[id]&&!(typeof comNames!=="undefined"&&comNames[id]));
+  if(miss.length){const q=await sb.from("profiles").select("id,name,avatar_url").in("id",miss);(q.data||[]).forEach(x=>ntNames[x.id]=x)}
+  ntNew=ntEv.filter(e=>e.t>ntSeen()).length;
+ }catch(e){ntEv=ntEv||[]}
+ ntBell()}
+setInterval(()=>{if(me&&!document.hidden)ntLoad(true)},60000);
+V.nt=function(){
+ if(ntEv===null){ntLoad(true).then(()=>{if(tab==="nt")render()});return`<div class="row" style="margin-bottom:10px"><button class="g" data-a="rtool" data-i="go|feed">←</button><h2 style="margin:0">Notificações</h2><span style="width:44px"></span></div><div class="mu" style="text-align:center;margin:30px 0">A carregar…</div>`}
+ const my=posts.filter(p=>p.author_id===me.id),title=id=>my.find(p=>p.id===id)?.title||"a tua publicação",U=id=>ntNames[id]||(typeof comNames!=="undefined"&&comNames[id])||null;
+ const K={f:"f",l:"r",c:"c",g:"g"},cnt=k=>(ntEv||[]).filter(e=>e.k===k).length;
+ const list=ntTab==="all"?ntEv:ntEv.filter(e=>e.k===K[ntTab]);
+ const ago=t=>{if(!t)return"";const x=(Date.now()-t)/1000;return x<60?"agora":x<3600?Math.floor(x/60)+" min":x<86400?Math.floor(x/3600)+" h":Math.floor(x/86400)+" d"};
+ const day=t=>{if(!t)return"Mais antigas";const d=new Date(t),n=new Date(),dd=Math.floor((new Date(n.getFullYear(),n.getMonth(),n.getDate())-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);return dd<=0?"Hoje":dd===1?"Ontem":dd<7?"Esta semana":"Mais antigas"};
+ const item=e=>{const u=U(e.u),n=esc(u?.name||"Alguém"),isNew=e.t>ntPrev;let txt,act="";
+  if(e.k==="f"){txt=`<b>${n}</b> começou a seguir-te`;act=isF(e.u)?`<span class="ntok">A seguir ✓</span>`:`<button class="ntb" data-a="fol" data-i="${e.u}">Seguir de volta</button>`}
+  else if(e.k==="c"){txt=`<b>${n}</b> comentou: «${esc((e.body||"").slice(0,70))}»`;act=`<button class="g ntb" data-a="det" data-i="${e.post}">↩ Responder</button>`}
+  else if(e.k==="r"){txt=`<b>${n}</b> reagiu ${EM[e.kind]||"👍"} a «${esc(title(e.post))}»`;act=`<button class="g ntb" data-a="det" data-i="${e.post}">Ver</button>`}
+  else{const g=LIVE_GIFTS.find(x=>x.id===e.gift);txt=`<b>${n}</b> enviou-te ${g?g.e+" "+esc(g.n):"um presente"} · 🪙 ${e.coins}`}
+  return`<div class="nti${isNew?" ntn":""}"><span data-a="up" data-i="${e.u}">${av(u,44)}</span><div class="ntx"><div>${txt}</div><small class="mu">${ago(e.t)}</small></div>${act}</div>`};
+ let last="",body="";list.forEach(e=>{const d=day(e.t);if(d!==last){body+=`<div class="dft">${d}</div>`;last=d}body+=item(e)});
+ const sum=k=>my.reduce((n,p)=>n+(stats[p.id]?.[k]||0),0);
+ const T=[["all","Todas",ntEv.length],["f","Seguidores",cnt("f")],["l","Gostos",cnt("r")],["c","Comentários",cnt("c")],["g","Presentes",cnt("g")]];
+ return`<div class="row" style="margin-bottom:10px"><button class="g" data-a="rtool" data-i="go|feed">←</button><h2 style="margin:0">Notificações</h2><button class="g" data-a="bellgo">✉${bellN?" "+bellN:""}</button></div>
+ <div class="ntk"><div><i>👥</i><b>${fmtN(nF(me.id))}</b><small>Seguidores</small></div><div><i>❤️</i><b>${fmtN(sum("likes"))}</b><small>Gostos</small></div><div><i>💬</i><b>${fmtN(sum("comments"))}</b><small>Comentários</small></div><div><i>👁</i><b>${fmtN(sum("views"))}</b><small>Visualizações</small></div></div>
+ <div class="pft">${T.map(t=>`<button class="${ntTab===t[0]?"":"g"}" data-a="nttab" data-i="${t[0]}">${t[1]}${t[2]?" ("+t[2]+")":""}</button>`).join("")}</div>
+ ${body||`<div class="empty">Ainda sem notificações${ntTab==="all"?"":" nesta categoria"}. Publica, partilha e faz Live para receberes interações.</div>`}`};
 async function loadChat(){const[a,b,c]=await Promise.all([sb.from("profiles").select("id,name,avatar_url").neq("id",me.id).order("name"),sb.from("messages").select("*").or(`sender_id.eq.${me.id},receiver_id.eq.${me.id}`).order("created_at"),sb.from("assistants").select("user_id,instructions").eq("enabled",true)]);people=a.data||[];msgs=b.data||[];assist=Object.fromEntries((c.data||[]).map(x=>[x.user_id,x.instructions]))}
 let chatQ="";
 const rdKey=()=>"zb_rd_"+(me?.id||""),getRd=()=>{try{return JSON.parse(localStorage.getItem(rdKey())||"{}")}catch(e){return{}}},markRd=id=>{try{const m=getRd();m[id]=Date.now();localStorage.setItem(rdKey(),JSON.stringify(m))}catch(e){}};
@@ -775,9 +833,9 @@ async function act(a,i){try{
  if(a==="vplay"||a==="vmute"||a==="vfs"){const v=(document.getElementById("shv")||document).querySelector('video[data-vb="'+i+'"]');if(!v)return;if(a==="vplay"){if(v.paused){delete v.dataset.man;v.play()}else{v.dataset.man="1";v.pause()}}if(a==="vmute"){v.muted=!v.muted;soundOn=!v.muted;document.querySelectorAll('button[data-a="vmute"]').forEach(x=>x.innerHTML=soundOn?IC.on:IC.off)}if(a==="vfs")(v.requestFullscreen||v.webkitEnterFullscreen).call(v);return}
  if(a==="csend"){const v=($("#cin")?.value||"").trim();if(!v)return;const r=await sb.from("community_messages").insert({author_id:me.id,body:v});if(r.error)return toast(r.error.message);$("#cin").value="";await loadCom();comPaint();const e=$("#cml");if(e)e.scrollTop=e.scrollHeight;return}
  if(a==="cdel"){const r=await sb.from("community_messages").delete().eq("id",i);if(r.error)return toast(r.error.message);await loadCom();comPaint();return}
- if(a==="bell"){const my=posts.filter(p=>p.author_id===me.id),ids=my.map(p=>p.id),[cr,fr]=await Promise.all([ids.length?sb.from("comments").select("*").in("post_id",ids).neq("author_id",me.id).order("created_at",{ascending:false}).limit(15):{data:[]},sb.from("follows").select("*").eq("followed_id",me.id).limit(30)]),ev=[];(cr.data||[]).forEach(c=>ev.push({t:+new Date(c.created_at),u:c.author_id,k:"c",c}));(fr.data||[]).forEach(f=>ev.push({t:f.created_at?+new Date(f.created_at):0,u:f.follower_id,k:"f"}));rxs.filter(x=>ids.includes(x.post_id)&&x.user_id!==me.id).forEach(x=>ev.push({t:x.created_at?+new Date(x.created_at):0,u:x.user_id,k:"r",x}));ev.sort((a,b)=>b.t-a.t);const top=ev.slice(0,25),miss=[...new Set(top.map(e=>e.u))].filter(id=>!comNames[id]);if(miss.length){const q=await sb.from("profiles").select("id,name,avatar_url").in("id",miss);(q.data||[]).forEach(x=>comNames[x.id]=x)}const views=my.reduce((n,p)=>n+(stats[p.id]?.views||0),0);let d=$("#md");if(!d){d=document.createElement("div");d.id="md";document.body.appendChild(d)}
-d.innerHTML=`<div class="box"><div class="row"><b>🔔 Notificações</b><button class="g" data-a="x">✕</button></div><div class="kp"><div><b>${bellN}</b>mensagens novas</div><div><b>${nF(me.id)}</b>seguidores</div><div><b>${rxs.filter(x=>ids.includes(x.post_id)&&x.user_id!==me.id).length}</b>reações</div><div><b>${views}</b>visualizações</div></div><button data-a="bellgo" style="margin:10px 0">✉ Abrir mensagens</button><h3>Atividade recente</h3>${top.map(e=>{const u=comNames[e.u],n=esc(u?.name||"Alguém");return`<div class="row" style="flex-wrap:nowrap;margin:10px 0;align-items:flex-start">${av(u,34,e.u)}<div style="flex:1;min-width:0">${e.k==="f"?`<b>${n}</b> começou a seguir-te`:e.k==="r"?`<b>${n}</b> reagiu ${EM[e.x.kind]||"👍"} a «${esc(my.find(p=>p.id===e.x.post_id)?.title||"")}»`:`<b>${n}</b> comentou: ${esc((e.c.body||"").slice(0,80))}`}</div>${e.k==="c"?`<button class="g" data-a="det" data-i="${e.c.post_id}" style="padding:2px 10px">↩ Responder</button>`:""}</div>`}).join("")||`<div class="mu">Ainda sem atividade.</div>`}</div>`;return}
- if(a==="bellgo"){localStorage.setItem("zb_seen_msgs"+me.id,new Date().toISOString());bellN=0;$("#md")?.remove();tab="chat";render();return}
+ if(a==="bell"){document.getElementById("md")?.remove();ntPrev=ntSeen();try{localStorage.setItem("zb_nt_"+me.id,String(Date.now()))}catch(e){}ntNew=0;ntBell();tab="nt";render();scrollTo(0,0);ntLoad(true).then(()=>{if(tab==="nt")render()});return}
+  if(a==="nttab"){ntTab=i;render();return}
+  if(a==="bellgo"){localStorage.setItem("zb_seen_msgs"+me.id,new Date().toISOString());bellN=0;$("#md")?.remove();tab="chat";render();return}
  if(a==="share"){const p=posts.find(x=>x.id===i);if(!p)return;if(!people.length)await loadChat();document.getElementById("shm")?.remove();const d=document.createElement("div");d.id="shm";d.style.cssText="position:fixed;inset:0;background:#000c;z-index:30;display:flex;align-items:flex-end;justify-content:center";d.innerHTML=`<div class="box"><div class="row"><b>↗ Partilhar «${esc(p.title)}»</b><button class="g" data-a="shc">✕</button></div><div class="row" style="margin:10px 0"><button data-a="shx2" data-i="${i}">📤 WhatsApp e outras apps</button><button class="g" data-a="shcom" data-i="${i}">💬 Para a Comunidade</button></div><b>✉ Enviar a um utilizador</b>${people.slice(0,40).map(u=>`<div class="row" style="margin:8px 0"><span>${esc(u.name)}</span><button class="g" data-a="shto" data-i="${i}|${u.id}">Enviar</button></div>`).join("")||`<div class="mu">Sem utilizadores.</div>`}</div>`;document.body.appendChild(d);return}
  if(a==="vcs"){const e=document.getElementById("vci-"+i),t=(e?.value||"").trim();if(!t)return;const r=await sb.from("comments").insert({post_id:i,author_id:me.id,body:t});if(r.error)return toast(r.error.message);e.value="";if(stats[i])stats[i].comments=(stats[i].comments||0)+1;toast("Comentário enviado ✓");return}
  if(a==="shc"){document.getElementById("shm")?.remove();return}
@@ -913,7 +971,7 @@ function ensureDir(){
    setTimeout(res,5000);
   }catch(e){liveDirState="erro: "+(e.message||e);res()}});
  return liveDirReady}
-{const _r=render;render=function(){const x=_r.apply(this,arguments);try{if(me){ensureDir();liveRefreshUI();liveDeepLink()}}catch(e){}return x}}
+{const _r=render;render=function(){const x=_r.apply(this,arguments);try{if(me){ensureDir();liveRefreshUI();liveDeepLink();ntLoad()}}catch(e){}return x}}
 /* ---------- utilitários de interface ---------- */
 const $l=id=>document.getElementById(id);
 function liveToast(t){const st=document.getElementById("liveStudio");if(!st){toast(t);return}st.querySelector(".lv-toast")?.remove();const d=document.createElement("div");d.className="lv-toast";d.textContent=t;st.appendChild(d);setTimeout(()=>d.remove(),3500)}
