@@ -410,7 +410,7 @@ function creatorPanel(){return`${studioTop()}${studioHero()}${studioAdminBox()}$
 let profTab="t",profCtx=null;
 const slug=n=>String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
 const PF_TOP={followers:50,views:1000},PF_VIRAL={views:200,likes:30};
-const pfOfficial=(p0,isMe)=>/fundador|administrador/i.test((p0&&p0.title)||"")||["zamba","zamba_oficial","zambaoficial"].includes(slug((p0&&p0.name)||""))||!!(isMe&&isAdm);
+const pfOfficial=(p0,isMe)=>!!(p0&&p0.official===true)||!!(isMe&&isAdm);
 function pfBadges(uid,nFol,ps,isMe,off){
  const tv=ps.reduce((t,p)=>t+(stats[p.id]?.views||0),0),mv=Math.max(0,...ps.map(p=>stats[p.id]?.views||0)),ml=Math.max(0,...ps.map(p=>stats[p.id]?.likes||0));
  const top=nFol>=PF_TOP.followers||tv>=PF_TOP.views,viral=mv>=PF_VIRAL.views||ml>=PF_VIRAL.likes;
@@ -433,7 +433,7 @@ function profHtml(uid,p0,nFol,nFing,fl,isMe){p0=p0||{};
   <div class="pfinfo"><div class="pfn">${bd.crown?'<span class="pfc">👑</span>':""}<span class="pfname">${esc(p0.name||"")}</span>${seal?ZSEAL(22):""}</div><div class="pfbd">${bd.html}</div><div class="pfat">@${esc(slug(p0.name))}</div></div></div>
  ${bioTxt?`<div class="pfbio bioc" id="bioc">${esc(bioTxt)}</div>${bioTxt.length>110||bioTxt.includes("\n")?`<div class="mu" data-a="bio" style="cursor:pointer;font-weight:700;margin:2px 0 6px">Ver mais</div>`:""}`:isMe?`<div class="pfbio mu" data-a="pedit" style="cursor:pointer">＋ Adiciona uma descrição ao teu perfil</div>`:""}
  ${tags.length?`<div class="pftags">${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>`:""}
- ${off?"":`<div class="mu" style="margin:4px 10px;font-size:13px">📍 ${esc(p0.province||"Moçambique")}${p0.title?" · "+esc(p0.title):""}</div>`}
+ ${off?"":`<div class="mu" style="margin:4px 10px;font-size:13px">📍 ${esc(p0.province||"Moçambique")}${p0.title&&!/fundador|administrador|oficial|zamba/i.test(p0.title)?" · "+esc(p0.title):""}</div>`}
  <div class="pfst"${off?' style="grid-template-columns:repeat(3,1fr)"':""}><div><i>👁</i><b>${fmtN(tv)}</b><small>Visualizações</small></div><div data-a="flist" data-i="${uid}|followers" style="cursor:pointer"><i>👥</i><b>${fmtN(nFol)}</b><small>Seguidores</small></div><div><i>❤️</i><b>${fmtN(tl)}</b><small>Gostos</small></div>${off?"":`<div data-a="flist" data-i="${uid}|following" style="cursor:pointer"><i>➕</i><b>${fmtN(nFing)}</b><small>A seguir</small></div>`}</div>
  <div class="pfact">${isMe?`<button class="g" data-a="pedit">✏️ Editar Perfil</button><button class="pfs" data-t="studio">👑 ZAMBA Studio</button><button class="pfcta full" data-t="new"><span>🚀</span><i>Criar Conteúdo, Fazer a Diferença!</i><b>›</b></button>`:`${isAdm?"":`<button data-a="tf" data-i="${uid}">${fl?"A seguir ✓":"Seguir"}</button>`}<button class="g" data-a="dmx" data-i="${uid}">Mensagem</button>${lv?`<button class="lvb full" data-lv="watch" data-host="${esc(uid)}">🔴 Assistir Live agora</button>`:""}`}</div>
  <div class="pft">${T.map(t=>`<button class="${tb===t[0]?"":"g"}${t[0]==="l"?" lvt":""}" data-a="ptab" data-i="${t[0]}">${t[1]}</button>`).join("")}</div>${body}</div>`}
