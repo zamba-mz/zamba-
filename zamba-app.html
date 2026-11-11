@@ -280,6 +280,16 @@ body{background:radial-gradient(circle at 85% -8%,#5b2fd180,transparent 48%),rad
 .ntb{padding:5px 12px;font-size:13px;flex:none}
 .ntok{font-size:12px;color:var(--mu);flex:none}
 </style>
+<style id="pk-css">
+.pk-chip{display:inline-flex;align-items:center;gap:5px;margin:6px 0 0;padding:4px 11px;border-radius:30px;font-size:12px;font-weight:800;color:#fff;background:color-mix(in srgb,var(--pc) 28%,transparent);border:1px solid var(--pc)}
+.pk-t{position:sticky;top:0;z-index:5;padding:8px 0;background:linear-gradient(var(--bg),#0e0a1ae6)}
+.pk-t button{white-space:nowrap;border-radius:30px;padding:9px 16px}
+.pk-box{margin:10px 4px}.pk-box p{margin:6px 0}
+.pk-list{display:grid;gap:8px;margin:10px 4px}
+.pk-row{display:grid;gap:3px;padding:13px;border-radius:14px;background:var(--p);border:1px solid var(--ln);cursor:pointer}
+.pk-empty{grid-column:1/-1;padding:28px 14px;margin:10px 4px;text-align:center;color:var(--mu);border:1px dashed var(--ln);border-radius:16px}
+.pk-cta{margin:8px 4px 0}
+</style>
 </head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
@@ -1431,4 +1441,72 @@ document.addEventListener("click",e=>{const t=e.target.closest("[data-t]");if(t)
 window.onerror=m=>toast("Erro: "+m);boot();setInterval(async()=>{if(!isAdm||!me)return;await adminStats();const k=document.getElementById("kpi");if(k&&adminData)k.innerHTML=KPI(adminData)},20000);
 
 const _stu0=V.studio;V.studio=function(){return creatorPanel()+_stu0()};
+
+/* ===== ZAMBA Premium · 4 tipos de perfil (Pessoal · Criador · Empresarial · Oficial) ===== */
+const PK={
+ personal:{n:"Pessoal",i:"👤",c:"#7c5cff",T:[["v","Publicações"],["s","Vídeos"],["p","Loja"],["g","Guardados"]]},
+ creator:{n:"Criador",i:"⭐",c:"#ff7a59",T:[["v","Publicações"],["l","LIVE"],["m","Música"],["e","Estatísticas"]]},
+ business:{n:"Empresarial",i:"🏪",c:"#2fd4c0",T:[["p","Loja"],["pr","Produtos"],["r","Avaliações"],["o","Pedidos"]]},
+ official:{n:"Oficial",i:"🛡️",c:"#3b9bff",T:[["f","Informações"],["n","Notícias"],["sv","Serviços"],["v","Publicações"]]}
+};
+const PK_CREATOR=["musician","model","creator","teacher","producer"],PK_BIZ=["seller","business"];
+function pkKind(p0,isMe){
+ if(pfOfficial(p0,isMe))return"official";
+ const r=(p0&&p0.account_type)||"customer";
+ return PK_BIZ.includes(r)?"business":PK_CREATOR.includes(r)?"creator":"personal"}
+const pkTitle=p=>esc(p.title||p.caption||p.name||"Publicação");
+const pkDate=p=>p.created_at?new Date(p.created_at).toLocaleDateString("pt-PT",{day:"2-digit",month:"short",year:"numeric"}):"";
+function pkTile(p){
+ const bg=p.cover_url?`url('${esc(p.cover_url)}')`:"linear-gradient(135deg,#4c2fb8,#c2410c)";
+ return`<div class="pt" data-a="det" data-i="${p.id}" data-bg="${bg}"><span>▶ ${fmtN(stats[p.id]?.views||0)} · ❤ ${fmtN(stats[p.id]?.likes||0)}</span>${p.type==="music"?"<i>♪ Música</i>":p.price_mt>0?`<i>🛒 ${p.price_mt} MT</i>`:""}</div>`}
+const pkEmpty=m=>`<div class="pk-empty">${m}</div>`;
+const pkGrid=(L,m)=>L.length?`<div class="pg">${L.map(pkTile).join("")}</div>`:pkEmpty(m);
+const pkRows=(L,m)=>L.length?`<div class="pk-list">${L.map(p=>`<div class="pk-row" data-a="det" data-i="${p.id}"><b>${pkTitle(p)}</b><span class="mu">${pkDate(p)} · 👁 ${fmtN(stats[p.id]?.views||0)}${p.price_mt>0?` · <span class="pr">${mt(p.price_mt)}</span>`:""}</span></div>`).join("")}</div>`:pkEmpty(m);
+const pkKpi=(a,b)=>`<div><b>${a}</b><span class="mu">${b}</span></div>`;
+
+function pkBody(tb,uid,p0,ps,isMe,nFol){
+ const S=ps.slice().sort((x,y)=>new Date(y.created_at)-new Date(x.created_at)),
+  prods=S.filter(p=>p.price_mt>0&&p.type!=="music"),vids=S.filter(p=>p.type==="video"&&!(p.price_mt>0)),mus=S.filter(p=>p.type==="music"),
+  tv=ps.reduce((t,p)=>t+(stats[p.id]?.views||0),0),tl=ps.reduce((t,p)=>t+(stats[p.id]?.likes||0),0);
+ if(tb==="v")return pkGrid(S,isMe?"Ainda não publicaste. Toca em Publicar para começar.":"Ainda sem publicações.");
+ if(tb==="s")return pkGrid(vids,"Ainda sem vídeos.");
+ if(tb==="m")return pkGrid(mus,"Ainda sem músicas.");
+ if(tb==="p")return pkGrid(prods,"Ainda sem produtos na loja.");
+ if(tb==="pr")return pkRows(prods,"Ainda sem produtos ou serviços publicados.");
+ if(tb==="sv")return pkRows(prods,"Esta conta ainda não publicou serviços.");
+ if(tb==="n")return pkRows(S,"Ainda sem notícias ou comunicados.");
+ if(tb==="r")return`<div class="box pk-box"><b>⭐ Avaliações de clientes</b><p class="mu">As avaliações aparecem aqui depois de compras confirmadas. Cada cliente poderá avaliar o produto e o atendimento.</p></div>`;
+ if(tb==="o")return isMe?`<div class="box pk-box"><b>📦 Pedidos e pagamentos</b><p class="mu">Gere encomendas, entregas e levantamentos no teu estúdio.</p><button data-t="studio" style="width:100%">Abrir ZAMBA Studio</button></div>`:`<div class="box pk-box"><b>🔒 Pedidos</b><p class="mu">Os pedidos são privados. Para comprar, abre a Loja e escolhe um produto.</p><button data-a="ptab" data-i="p" style="width:100%">Ver loja</button></div>`;
+ if(tb==="g"){
+  if(!isMe)return`<div class="box pk-box"><b>🔒 Guardados</b><p class="mu">Os conteúdos guardados são privados.</p></div>`;
+  return pkGrid(posts.filter(p=>likedSet.has(p.id)),"Ainda não guardaste nada. Os conteúdos de que gostas ficam aqui.")}
+ if(tb==="e"){
+  const top=S.slice().sort((x,y)=>(stats[y.id]?.views||0)-(stats[x.id]?.views||0)).slice(0,3),
+   eng=tv?Math.round(tl/tv*1000)/10:0;
+  return`<div class="box pk-box"><b>📊 Estatísticas</b><div class="kp" style="margin-top:10px">${pkKpi(fmtN(tv),"Visualizações")}${pkKpi(fmtN(tl),"Gostos")}${pkKpi(fmtN(nFol),"Seguidores")}${pkKpi(fmtN(ps.length),"Publicações")}${pkKpi(eng+"%","Taxa de gostos")}</div></div>
+  <div class="box pk-box"><b>🏆 Mais vistas</b>${pkRows(top,"Publica conteúdo para veres o desempenho.")}</div>
+  ${isMe?`<div class="box pk-box"><b>💰 Monetização</b><p class="mu">Recebe presentes nas Lives, vende conteúdos e levanta o teu saldo.</p><button data-t="studio" style="width:100%">Abrir ferramentas de criador</button></div>`:""}`}
+ if(tb==="f"){
+  return`<div class="box pk-box"><b>🛡️ Conta oficial verificada</b><p class="mu">Esta conta foi verificada pela ZAMBA. Os comunicados e serviços aqui publicados são da responsabilidade da instituição.</p></div>
+  <div class="box pk-box"><b>Sobre</b><p>${esc(p0.bio||"Sem descrição institucional.")}</p><div class="mu">📍 ${esc(p0.province||"Moçambique")}</div></div>
+  <div class="box pk-box"><div class="kp sm">${pkKpi(fmtN(nFol),"Seguidores")}${pkKpi(fmtN(ps.length),"Comunicados")}${pkKpi(fmtN(tv),"Visualizações")}</div></div>`}
+ return""}
+
+const _ph0=profHtml;
+profHtml=function(uid,p0,nFol,nFing,fl,isMe){
+ let h=_ph0(uid,p0,nFol,nFing,fl,isMe);
+ try{
+  p0=p0||{};const k=pkKind(p0,isMe),K=PK[k];
+  if(!K.T.some(t=>t[0]===profTab))profTab=K.T[0][0];
+  const tb=profTab,a=h.indexOf('<div class="pft">');
+  if(a<0)return h;
+  const e=h.indexOf("</div>",a)+6,last=h.lastIndexOf("</div>"),
+   bar=`<div class="pft pk-t">${K.T.map(t=>`<button class="${tb===t[0]?"":"g"}${t[0]==="l"?" lvt":""}" data-a="ptab" data-i="${t[0]}">${t[1]}</button>`).join("")}</div>`,
+   cta=(k==="business"&&!isMe&&tb!=="p")?`<div class="pk-cta"><button data-a="ptab" data-i="p" style="width:100%">🛍 Ver loja e produtos</button></div>`:"",
+   ps=posts.filter(x=>x.author_id===uid),
+   body=tb==="l"?h.slice(e,last):pkBody(tb,uid,p0,ps,isMe,nFol);
+  h=h.slice(0,a)+cta+bar+body+h.slice(last);
+  h=h.replace(/(<div class="pfat">[^<]*<\/div>)/,(m)=>m+`<span class="pk-chip" style="--pc:${K.c}">${K.i} Perfil ${K.n}</span>`);
+ }catch(x){console.error("ZAMBA perfil:",x)}
+ return h};
 </script></body></html>
