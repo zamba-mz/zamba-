@@ -366,6 +366,14 @@ body{background:radial-gradient(circle at 85% -8%,#5b2fd180,transparent 48%),rad
 .pkb button{position:relative;flex:1;color:#cfc3ea;font-size:11px}.pkb button.on{color:#d946ef;box-shadow:inset 0 -3px 0 #d946ef}
 .pkb .pk-plus{flex:0 0 58px;width:58px;height:58px;margin-top:-26px;padding:0;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 0 18px #c155ff99,inset 0 0 0 3px #ffffff33;background:conic-gradient(from 200deg,#7c5cff,#d946ef,#ff7a59,#7c5cff)}
 .pk-bd{position:absolute;top:-4px;right:calc(50% - 26px);min-width:20px;padding:1px 5px;border-radius:10px;background:#ff2d4d;color:#fff;font-size:11px;font-style:normal;font-weight:800}
+/* ===== v5: cabeçalho limpo, números simples ===== */
+.zp-hd{grid-template-columns:auto minmax(0,1fr);margin-top:-34px}
+.zp-nmw{padding-top:36px}
+.zp-n{white-space:nowrap}.zp-n span{overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;white-space:nowrap}
+.zp-act{display:flex;flex-wrap:nowrap;justify-content:flex-start;width:auto;gap:8px;padding:10px 12px 0}
+.zp-act .zp-main{flex:0 0 auto;padding:0 20px}.zp-act .zp-sec{flex:0 0 auto;padding:0 14px;height:34px;min-height:34px;font-size:13px}
+.zp-act .zp-ic{width:34px;height:34px}
+.zp-st>div{display:block;text-align:center}.zp-st span{display:block}.zp-st b{display:block;font-size:20px}.zp-st small{font-size:13px;color:var(--mu)}
 </style>
 </head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -432,7 +440,7 @@ async function load(){const q=(t)=>t;const[p,s,st,ml,ad,sv,rx]=await Promise.all
  posts=p.data||[];fol=await fetchFol();seen=new Set((sv.data||[]).map(x=>x.story_id));rxs=rx.data||[];await signFree();stories=s.data||[];if(s.error)toast("Stories: "+s.error.message);if(stories.length){const pr=await sb.from("profiles").select("id,name,avatar_url").in("id",[...new Set(stories.map(x=>x.author_id))]),pm=Object.fromEntries((pr.data||[]).map(x=>[x.id,x]));stories.forEach(x=>x.profiles=pm[x.author_id])}stats=Object.fromEntries((st.data||[]).map(x=>[x.post_id,x]));likedSet=new Set((ml.data||[]).map(x=>x.post_id));isAdm=!!(ad.data&&ad.data.length);if(p.error)toast("Erro a carregar: "+p.error.message);await loadChat();await loadOrders();await signFree();await loadCoins();sb.from("daily_active").upsert({user_id:me.id},{ignoreDuplicates:true}).then(()=>{});if(isAdm)await adminStats()}
 function render(){const root=$("#root");if(!ok)return;if(!me&&!localStorage.getItem("zb_onb")){root.innerHTML=introView();return}if(!me){root.innerHTML=authView();return}if(localStorage.getItem("zb_new")){root.innerHTML=introView();return}
  const nav=[["feed",IC.home,"Início"],["shorts",IC.play,"Curtos"],["new","＋","Publicar"],["chat",IC.chat,"Mensagens"],["me",IC.user,"Perfil"]].concat(isAdm?[["adm","👑","Admin"]]:[]);
- root.innerHTML=`<div class="row" style="padding:4px 0 10px"><div class="logo" style="display:flex;align-items:center;gap:8px"><img src="${ZL}" style="width:30px;height:30px;border-radius:8px">ZAMBA</div><div class="row">${isAdm?'<span class="mu">admin</span>':""}<button class="g live-nav" data-t="live">● LIVE</button><button class="ib" data-t="exp" aria-label="Explorar">${IC.compass}</button><button class="g" id="bellb" data-a="bell">🔔${(bellN+ntNew)?" "+(bellN+ntNew):""}</button><button class="g" data-a="cartv">🛒 ${cart.length}</button><button class="ib" data-a="more" aria-label="Mais">${IC.dots}</button></div></div><div id="app"></div><div class="bot">${nav.map(b=>`<button class="${tab===b[0]?"on":""}" data-t="${b[0]}"><span>${b[1]}</span>${b[2]}</button>`).join("")}</div>`;
+ root.innerHTML=`<div class="row" style="padding:4px 0 10px"><div class="logo" style="display:flex;align-items:center;gap:8px"><img src="${ZL}" style="width:30px;height:30px;border-radius:8px">ZAMBA</div><div class="row">${isAdm?'<span class="mu">admin</span>':""}<button class="g live-nav" data-t="live">● LIVE</button><button class="g" id="bellb" data-a="bell">🔔${(bellN+ntNew)?" "+(bellN+ntNew):""}</button><button class="g" data-a="cartv">🛒 ${cart.length}</button><button class="ib" data-a="more" aria-label="Mais">${IC.dots}</button></div></div><div id="app"></div><div class="bot">${nav.map(b=>`<button class="${tab===b[0]?"on":""}" data-t="${b[0]}"><span>${b[1]}</span>${b[2]}</button>`).join("")}</div>`;
  $("#app").innerHTML=(V[tab]||V.feed)()}
 function authView(){const up=authTab==="up";return`<div class="auth"><div class="logo" style="font-size:40px">✦ ZAMBA</div><div class="mu">Aprende. Cria. Vende. Cresce.</div><div class="box"><div class="row"><button class="${up?"g":""}" data-a="atab" data-i="in">Entrar</button><button class="${up?"":"g"}" data-a="atab" data-i="up">Criar conta</button></div>
  ${up?`<label>Nome</label><input id="an">`:""}<label>Email</label><input id="ae" type="email" autocomplete="email"><label>Palavra-passe (mínimo 8)</label><input id="ap" type="password">
@@ -613,7 +621,7 @@ let replyTo=null,cmL=[];
 {const _r=new URLSearchParams(location.search).get("ref");if(_r)localStorage.setItem("zb_ref",_r)}
 document.head.insertAdjacentHTML("beforeend","<style>.st i{border-radius:20px!important}.st i b{border-radius:17px!important}</style>");
 async function autoFollow(){if(!me||isAdm||localStorage.getItem("zb_af"+me.id))return;localStorage.setItem("zb_af"+me.id,"1");const ids=[],rf=localStorage.getItem("zb_ref");if(rf)ids.push(rf);const z=await sb.from("profiles").select("id").eq("name","ZAMBA").limit(1);if(z.data?.[0])ids.push(z.data[0].id);for(const id of ids)if(id!==me.id&&!isF(id))await sb.from("follows").insert({follower_id:me.id,followed_id:id});localStorage.removeItem("zb_ref");fol=await fetchFol();render()}
-const newCreators=()=>{if(feedQ)return"";const m=new Map();posts.forEach(p=>{if(p.author_id!==me.id&&!isF(p.author_id)&&!m.has(p.author_id))m.set(p.author_id,p.profiles)});const L=[...m].map(([id,pr])=>({id,pr,n:nF(id)})).sort((a,b)=>a.n-b.n).slice(0,10);return L.length?`<div style="margin:8px 0"><b>🌱 Novos criadores · segue e apoia</b></div><div class="chips" style="gap:10px">${L.map(x=>`<div class="box" style="margin:0;padding:10px;min-width:120px;text-align:center;flex:none">${av(x.pr,52,x.id)}<div style="font-weight:700;margin:6px 0;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.pr?.name||"")}</div><div class="mu">${sg(x.n)}</div><button data-a="fol" data-i="${x.id}" style="margin-top:6px;padding:4px 12px">Seguir</button></div>`).join("")}</div>`:""};
+const newCreators=()=>{return"";const m=new Map();posts.forEach(p=>{if(p.author_id!==me.id&&!isF(p.author_id)&&!m.has(p.author_id))m.set(p.author_id,p.profiles)});const L=[...m].map(([id,pr])=>({id,pr,n:nF(id)})).sort((a,b)=>a.n-b.n).slice(0,10);return L.length?`<div style="margin:8px 0"><b>🌱 Novos criadores · segue e apoia</b></div><div class="chips" style="gap:10px">${L.map(x=>`<div class="box" style="margin:0;padding:10px;min-width:120px;text-align:center;flex:none">${av(x.pr,52,x.id)}<div style="font-weight:700;margin:6px 0;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.pr?.name||"")}</div><div class="mu">${sg(x.n)}</div><button data-a="fol" data-i="${x.id}" style="margin-top:6px;padding:4px 12px">Seguir</button></div>`).join("")}</div>`:""};
 const msgBody=m=>{const x=/#post:([0-9a-f-]{36})/.exec(m.body||""),t=esc((m.body||"").replace(/#post:[0-9a-f-]{36}/,"").trim());return(m.is_bot?"<b>🤖 Assistente: </b>":"")+t+(x?`<br><button class="g" data-a="det" data-i="${x[1]}" style="margin-top:6px;padding:4px 12px">▶ Abrir</button>`:"")};
 const cmHtml=L=>{cmL=L;replyTo=null;const one=(c,ind)=>`<div style="margin:8px 0 8px ${ind}px"><b>${esc(c.profiles?.name||"")}</b> <span class="mu">${new Date(c.created_at).toLocaleString("pt-PT")}</span><div>${esc(c.body)}</div><button class="g" data-a="crep" data-i="${c.id}" style="padding:2px 10px;margin-top:4px">↩ Responder</button></div>`;return L.filter(c=>!c.parent_id).map(c=>one(c,0)+L.filter(r=>r.parent_id===c.id).map(r=>one(r,24)).join("")).join("")||`<div class="mu">Sê o primeiro a comentar.</div>`};
 document.addEventListener("change",e=>{if(e.target.id!=="fm")return;const f=e.target.files[0],h=document.getElementById("prvp");if(!h)return;if(!f||!f.type.startsWith("video")){h.innerHTML="";return}h.innerHTML=`<div class="mu" style="margin:8px 0">Arraste o vídeo até a parte mais forte e toque em "Usar este ponto".</div><video id="prvv" src="${URL.createObjectURL(f)}" controls playsinline style="width:100%;max-height:260px;border-radius:12px;background:#000"></video><div class="row" style="margin-top:8px"><button class="g" data-a="usept">📍 Usar este ponto</button><button class="g" data-a="prvplay">▶ Ver a prévia</button></div>`});
@@ -1608,14 +1616,14 @@ function pkProfile(uid,p0,nFol,nFing,fl,isMe){
  return`<div class="pf zp" style="--pc:${K.c}">
  <div class="zp-cv" ${isMe?'data-a="setcv"':""} style="background-image:linear-gradient(transparent 65%,var(--bg)),${cv}">${isMe?"":`<button class="zp-ic zp-back" data-a="x" aria-label="Voltar">${pki("back",22)}</button>`}${isMe?`<span class="pfedit">📷 Capa</span>`:""}</div>
  <div class="zp-hd"><span class="zp-av${lv?" live":""}" ${isMe?'data-a="setav"':""}>${avatar}${isMe?`<i class="zp-plus">${pki("plus",14)}</i>`:seal?`<i class="zp-seal">${ZSEAL(24)}</i>`:""}${lv?'<b class="pflive">AO VIVO</b>':""}</span>
-  <div class="zp-nmw"><div class="zp-n"><span>${esc(p0.name||"")}</span>${seal?ZSEAL(20):""}</div><div class="zp-at">@${esc(slug(p0.name))}</div></div>
-  <div class="zp-act">${isMe?`<button class="zp-main" data-a="pedit">Editar perfil</button><button class="zp-sec" data-t="studio">Studio</button>`:`<button class="zp-main${fl?" fol":""}" data-a="tf" data-i="${uid}">${fl?pki("check",17)+" A seguir":pki("user",18)+" Seguir"}</button><button class="zp-sec" data-a="dmx" data-i="${uid}">${pki("send",16)} Mensagem</button>`}<button class="zp-ic" data-pk="more" aria-label="Mais">${pki("dots",18)}</button></div></div>
+  <div class="zp-nmw"><div class="zp-n"><span>${esc(p0.name||"")}</span>${seal?ZSEAL(20):""}</div><div class="zp-at">@${esc(slug(p0.name))}</div></div></div>
+  <div class="zp-act">${isMe?`<button class="zp-main" data-a="pedit">Editar perfil</button><button class="zp-sec" data-t="studio">Studio</button>`:`<button class="zp-main${fl?" fol":""}" data-a="tf" data-i="${uid}">${fl?pki("check",17)+" A seguir":pki("user",18)+" Seguir"}</button><button class="zp-sec" data-a="dmx" data-i="${uid}">${pki("send",16)} Mensagem</button>`}<button class="zp-ic" data-pk="more" aria-label="Mais">${pki("dots",18)}</button></div>
  ${lv?`<button class="lvb full" data-lv="watch" data-host="${esc(uid)}" style="width:calc(100% - 28px);margin:8px 14px 0;padding:9px">🔴 Assistir Live agora</button>`:""}
  <div class="zp-more" hidden><button class="g" data-pk="share">📤 Partilhar perfil</button><button class="g" data-pk="copy">🔗 Copiar link</button></div>
  ${bioTxt?`<div class="zp-bw"><div class="zp-bio${longBio?" cl":""}" id="bioc">${esc(bioTxt)}</div>${longBio?`<button class="zp-vm" data-pk="bio">Ver mais ⌄</button>`:""}</div>`:isMe?`<div class="zp-bw"><div class="zp-bio mu" data-a="pedit" style="cursor:pointer">＋ Adiciona uma descrição ao teu perfil</div></div>`:""}
  ${tags.length?`<div class="pftags">${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>`:""}
  <div class="zp-meta"><span>${pki("pin",18)} ${esc(loc)}</span>${web?`<a href="${esc(web)}" target="_blank" rel="noopener noreferrer">${pki("link",16)} ${esc(web.replace(/^https?:\/\//i,"").replace(/\/$/,""))}</a>`:""}${off?"":`<span class="pk-chip" style="--pc:${K.c}">${K.i} ${K.n}</span>`}</div>
- <div class="zp-st"><div data-a="flist" data-i="${uid}|following">${pki("users",30)}<span><b>${fmtN(nFing)}</b><small>Seguindo</small></span></div><div data-a="flist" data-i="${uid}|followers">${pki("users",30)}<span><b>${fmtN(nFol)}</b><small>Seguidores</small></span></div><div>${pki("heart",30)}<span><b>${fmtN(tl)}</b><small>Gostos</small></span></div></div>
+ <div class="zp-st"><div data-a="flist" data-i="${uid}|following"><span><b>${fmtN(nFing)}</b><small>Seguindo</small></span></div><div data-a="flist" data-i="${uid}|followers"><span><b>${fmtN(nFol)}</b><small>Seguidores</small></span></div><div><span><b>${fmtN(tl)}</b><small>Gostos</small></span></div></div>
  <div class="zp-qr">${q}</div>
  ${isMe?pkSuggest():""}
  ${cta}<div class="zp-tabs">${bar}</div>${pkBody(tb,uid,p0,ps,isMe,nFol)}</div>`}
@@ -1632,7 +1640,7 @@ profHtml=function(uid,p0,nFol,nFing,fl,isMe){
  try{return pkProfile(uid,p0,nFol,nFing,fl,isMe)}
  catch(x){console.error("ZAMBA perfil:",x);return _ph0(uid,p0,nFol,nFing,fl,isMe)}};
 
-function pkSuggest(){
+function pkSuggest(){return"";
  if(!me)return"";
  const seen=new Set(),L=[];
  posts.forEach(p=>{const u=p.author_id;if(!u||u===me.id||seen.has(u)||isF(u))return;seen.add(u);L.push({id:u,p:p.profiles||{},n:nF(u)})});
@@ -1652,5 +1660,9 @@ document.addEventListener("click",async e=>{
   await navigator.clipboard.writeText(url);toast("Link copiado.")}catch(x){if(x&&x.name!=="AbortError")toast("Não foi possível partilhar.")}});
 document.documentElement.style.setProperty("--zl",`url(${ZL})`);
 document.addEventListener("click",e=>{if(e.target.closest(".zp-q[data-t]"))document.getElementById("md")?.remove()});
-window.ZAMBA_BUILD="perfis-v4";
+document.addEventListener("ended",e=>{const v=e.target;if(!v||v.tagName!=="VIDEO"||!v.dataset.vb)return;
+ const sh=v.closest("#shv");if(!sh)return;
+ const nx=[...sh.querySelectorAll('[data-a="det"][data-i]')].find(x=>x.dataset.i!==v.dataset.vb&&!x.closest("video"));
+ if(nx){nx.click();setTimeout(()=>{const w=document.querySelector("#shv video[data-vb]");if(w){const p=w.play();if(p&&p.catch)p.catch(()=>{})}},500)}},true);
+window.ZAMBA_BUILD="perfis-v5";
 </script></body></html>
