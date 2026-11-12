@@ -374,6 +374,19 @@ body{background:radial-gradient(circle at 85% -8%,#5b2fd180,transparent 48%),rad
 .zp-act .zp-main{flex:0 0 auto;padding:0 20px}.zp-act .zp-sec{flex:0 0 auto;padding:0 14px;height:34px;min-height:34px;font-size:13px}
 .zp-act .zp-ic{width:34px;height:34px}
 .zp-st>div{display:block;text-align:center}.zp-st span{display:block}.zp-st b{display:block;font-size:20px}.zp-st small{font-size:13px;color:var(--mu)}
+/* ===== ZAMBA Studio ===== */
+.sd-hero{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:linear-gradient(110deg,#1a0b3d,#3b1380 55%,#6b1d8f);border:1px solid #7c3aed88}
+.sd-hero img{width:52px;height:52px;border-radius:14px}.sd-hero h1{margin:0;font-size:24px;font-weight:900}.sd-hero h1 i{font-style:normal;background:linear-gradient(90deg,#d946ef,#7c9cff,#ffb100);-webkit-background-clip:text;color:transparent}.sd-hero small{color:#d8cbea}
+.sd-me{display:flex;align-items:center;gap:10px;margin:10px 2px}.sd-me>div{display:grid;gap:3px}
+.sd-kp{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sd-k{display:grid;gap:2px;padding:12px;border-radius:16px;border:1px solid #ffffff22}.sd-k b{font-size:24px}.sd-k small{opacity:.85}
+.sd-k.k1{background:linear-gradient(135deg,#2a1470,#5b21b6)}.sd-k.k2{background:linear-gradient(135deg,#0b2a6b,#1d6fdc)}.sd-k.k3{background:linear-gradient(135deg,#6b0d2a,#e11d48)}.sd-k.k4{background:linear-gradient(135deg,#064e5a,#0ea5a5)}
+.sd-bx{margin:10px 0}.sd-two{display:grid;gap:0}
+.sd-n{display:flex;gap:16px;margin-top:8px}.sd-n>div{display:grid}.sd-n b{font-size:18px}.sd-n small{color:var(--mu)}
+.sd-tl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.sd-tl button{display:grid;justify-items:center;gap:4px;background:none;border:0;padding:0;font-size:12px;font-weight:600;color:var(--tx)}
+.sd-tl img{width:100%;max-width:84px;aspect-ratio:1;object-fit:contain;mix-blend-mode:screen;border-radius:14px}
+.sd-sec{margin:16px 2px 6px;font-weight:800;color:#c9b8ff}
 </style>
 </head><body><div class="w" id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -1664,5 +1677,39 @@ document.addEventListener("ended",e=>{const v=e.target;if(!v||v.tagName!=="VIDEO
  const sh=v.closest("#shv");if(!sh)return;
  const nx=[...sh.querySelectorAll('[data-a="det"][data-i]')].find(x=>x.dataset.i!==v.dataset.vb&&!x.closest("video"));
  if(nx){nx.click();setTimeout(()=>{const w=document.querySelector("#shv video[data-vb]");if(w){const p=w.play();if(p&&p.catch)p.catch(()=>{})}},500)}},true);
-window.ZAMBA_BUILD="perfis-v5";
+window.ZAMBA_BUILD="studio-v1";
+
+/* ===== ZAMBA Studio · painel principal (dados reais; mantém a Studio existente por baixo) ===== */
+PKI.chat='<path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>';
+let sdCoinsAsked=false;
+const _stuPrev=V.studio;
+function sdKpi(cls,ico,t,v){return`<div class="sd-k ${cls}">${pki(ico,24)}<small>${t}</small><b>${fmtN(v)}</b></div>`}
+function sdChart(L){
+ if(!L.length)return`<div class="pk-empty">Ainda sem publicações. Cria o teu primeiro vídeo para ver o desempenho.</div>`;
+ const mx=Math.max(1,...L.map(p=>stats[p.id]?.views||0)),w=300/L.length;
+ return`<svg viewBox="0 0 300 120" width="100%" role="img" aria-label="Visualizações por publicação">${L.map((p,i)=>{const v=stats[p.id]?.views||0,h=Math.max(3,Math.round(v/mx*88));return`<g data-a="det" data-i="${p.id}" style="cursor:pointer"><rect x="${i*w+w*.18}" y="${100-h}" width="${w*.64}" height="${h}" rx="4" fill="url(#sdg)"/><text x="${i*w+w/2}" y="${96-h}" text-anchor="middle" font-size="9" fill="#e9ddff">${fmtN(v)}</text><text x="${i*w+w/2}" y="114" text-anchor="middle" font-size="8" fill="#9a8cc4">${esc((p.title||"").slice(0,7))}</text></g>`}).join("")}<defs><linearGradient id="sdg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d946ef"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs></svg>`}
+V.studio=function(){
+ const h=_stuPrev();
+ if(!stu||!me)return h;
+ try{
+  if(!sdCoinsAsked&&typeof loadCoins==="function"){sdCoinsAsked=true;loadCoins().then(()=>{if(tab==="studio")render()}).catch(()=>{})}
+  const my=posts.filter(p=>p.author_id===me.id),role=prof?.account_type||"customer",
+   tv=my.reduce((n,p)=>n+(stats[p.id]?.views||0),0),tl=my.reduce((n,p)=>n+(stats[p.id]?.likes||0),0),tc=my.reduce((n,p)=>n+(stats[p.id]?.comments||0),0),
+   last=my.slice().sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).slice(-7),
+   ear=sales.reduce((n,x)=>n+Math.max(0,(x.price_mt||0)-(x.commission_mt||0)),0),cmm=sales.reduce((n,x)=>n+(x.commission_mt||0),0),
+   shop=PK_BIZ.includes(role)||sales.length>0,
+   T=[["v","Criar vídeo",'data-a="gopub" data-i="video"'],["z","Z Shorts",'data-t="shorts"'],["l","LIVE",'data-t="live"'],["p","Publicar produto",'data-a="rtool" data-i="pub|product"'],["m","Mercado",'data-t="mkt"'],["g","Presentes",'data-t="nt"']],
+   hero=`<div class="sd-hero"><img src="${ZL}" alt="ZAMBA"><div><h1>ZAMBA <i>Studio</i></h1><small>Criar, gerir e crescer na ZAMBA</small></div></div>
+   <div class="sd-me">${av(prof,40)}<div><b>${esc(prof?.name||"")}</b><span class="pk-chip" style="--pc:${isAdm?"#ffb100":"#7c5cff"}">${isAdm?"👑 Fundador":esc((ROLES.find(r=>r[0]===role)||[])[1]||"Conta")}</span></div></div>`,
+   body=`${hero}
+   <div class="sd-kp">${sdKpi("k1","s","Visualizações",tv)}${sdKpi("k2","users","Seguidores",nF(me.id))}${sdKpi("k3","heart","Gostos",tl)}${sdKpi("k4","chat","Comentários",tc)}</div>
+   <div class="box sd-bx"><b>📈 Desempenho do teu conteúdo</b><div class="mu" style="font-size:12px">Visualizações das tuas últimas ${last.length||7} publicações</div>${sdChart(last)}</div>
+   <div class="sd-two">${shop?`<div class="box sd-bx"><b>🏪 Loja e vendas</b><div class="sd-n"><div><b>${fmtN(sales.length)}</b><small>Vendas</small></div><div><b>${mt(ear)}</b><small>Receita</small></div><div><b>${mt(cmm)}</b><small>Comissões</small></div></div></div>`:""}
+   <div class="box sd-bx"><b>🪙 ZAMBA Coin</b><div class="sd-n"><div><b>${fmtN(coins||0)} ZC</b><small>Saldo</small></div></div></div></div>
+   <div class="box sd-bx"><b>🧰 Ferramentas da ZAMBA</b><div class="sd-tl">${T.map(t=>`<button ${t[2]}><img src="${PKIC[t[0]]}" alt=""><span>${t[1]}</span></button>`).join("")}</div></div>
+   ${isAdm?`<div class="box sd-bx"><b>👑 Gestão Global do Fundador</b><p class="mu" style="margin:6px 0">Estatísticas, utilizadores, denúncias e finanças de toda a plataforma.</p><button data-t="adm" style="width:100%">Abrir gestão global</button></div>`:""}
+   <div class="sd-sec">Progresso e ferramentas da conta</div>`,
+   rest=h.replace(/<div class="box" style="background:[^"]*"><div class="row"[^>]*>(?:(?!<\/p><\/div>)[\s\S])*?✦ ZAMBA Studio[\s\S]*?<\/p><\/div>/,"");
+  return`<div class="sd">${body}</div>${rest}`;
+ }catch(x){console.error("ZAMBA Studio:",x);return h}};
 </script></body></html>
