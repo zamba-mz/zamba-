@@ -1,0 +1,54 @@
+
+name: ZAMBA Android Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - zamba-android-preparation
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get ZAMBA source
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Prepare ZAMBA web files
+        run: npm run build:web
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Synchronize Android
+        run: npx cap sync android
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Save ZAMBA APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAMBA-Android-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
