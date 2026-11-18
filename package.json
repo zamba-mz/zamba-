@@ -1,0 +1,16 @@
+
+{
+  "name": "zamba-android",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:web": "mkdir -p www && cp zamba-app.html www/index.html"
+  },
+  "dependencies": {
+    "@capacitor/core": "latest",
+    "@capacitor/android": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "latest"
+  }
+}
