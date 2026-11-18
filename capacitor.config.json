@@ -1,0 +1,9 @@
+
+{
+  "appId": "mz.zamba.app",
+  "appName": "ZAMBA",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
