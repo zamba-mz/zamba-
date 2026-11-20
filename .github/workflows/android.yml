@@ -40,12 +40,41 @@ jobs:
 
       - name: Synchronize Android
         run: npx cap sync android
-
-      - name: Add camera and microphone permissions
+   
+      - name: Configure Android camera and microphone permissions
         run: |
-          MANIFEST="android/app/src/main/AndroidManifest.xml"
-          sed -i '/<manifest /a\    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.RECORD_AUDIO" />' "$MANIFEST"
-          
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          content = manifest.read_text(encoding="utf-8")
+
+          permissions = [
+              "android.permission.CAMERA",
+              "android.permission.RECORD_AUDIO",
+              "android.permission.MODIFY_AUDIO_SETTINGS",
+          ]
+
+          for permission in permissions:
+              if not re.search(
+                  rf'<uses-permission\s+android:name="{re.escape(permission)}"\s*/?>',
+                  content
+              ):
+                  content = re.sub(
+                      r'(<manifest\b[^>]*>)',
+                      r'\1\n    <uses-permission android:name="' + permission + '" />',
+                      content,
+                      count=1
+                  )
+
+          if not re.search(r'<application\b', content):
+              raise SystemExit("Erro: elemento application não encontrado.")
+
+          manifest.write_text(content, encoding="utf-8")
+          print("Permissões da câmara e do microfone verificadas.")
+          PY
+       
       - name: Build APK
         run: |
           cd android
