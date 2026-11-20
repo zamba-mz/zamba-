@@ -41,6 +41,11 @@ jobs:
       - name: Synchronize Android
         run: npx cap sync android
 
+      - name: Add camera and microphone permissions
+        run: |
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          sed -i '/<manifest /a\    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.RECORD_AUDIO" />' "$MANIFEST"
+          
       - name: Build APK
         run: |
           cd android
