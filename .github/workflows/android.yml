@@ -38,6 +38,13 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
+      - name: Install ZAMBA branding
+        run: |
+          unzip -o zamba-identidade-android.zip -d branding
+          for folder in branding/zamba-identidade-android/android/app/src/main/res/mipmap-*; do
+            cp "$folder"/ic_launcher*.png "android/app/src/main/res/$(basename "$folder")/"
+          done
+
       - name: Synchronize Android
         run: npx cap sync android
 
