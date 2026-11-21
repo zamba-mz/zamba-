@@ -10,32 +10,59 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: zamba-android-build
+  cancel-in-progress: true
+
 jobs:
   build:
+    name: Build ZAMBA APK
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - name: Get ZAMBA source
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Install Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install Java
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
-      - name: Prepare ZAMBA web files
+      - name: Validate project files
+        run: |
+          test -f zamba-app.html
+          test -f capacitor.config.json
+          test -f file_000000007ed48208aac7a9cb25df704a.png
+          echo "ZAMBA project files verified."
+
+      - name: Build web application
         run: npm run build:web
 
-      - name: Generate ZAMBA app icon
+      - name: Ensure Android platform
+        run: |
+          if [ ! -d android ]; then
+            echo "Creating Android platform..."
+            npx cap add android
+          fi
+
+          if [ ! -f android/app/src/main/AndroidManifest.xml ]; then
+            echo "ERROR: Android platform is incomplete."
+            exit 1
+          fi
+
+          echo "Android platform verified."
+
+      - name: Generate official ZAMBA icon
         run: |
           mkdir -p assets
           cp file_000000007ed48208aac7a9cb25df704a.png assets/icon.png
@@ -44,8 +71,8 @@ jobs:
 
       - name: Synchronize Android
         run: npx cap sync android
-   
-      - name: Configure Android camera and microphone permissions
+
+      - name: Configure Android permissions
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -61,10 +88,8 @@ jobs:
           ]
 
           for permission in permissions:
-              if not re.search(
-                  rf'<uses-permission\s+android:name="{re.escape(permission)}"\s*/?>',
-                  content
-              ):
+              pattern = rf'<uses-permission\s+android:name="{re.escape(permission)}"\s*/?>'
+              if not re.search(pattern, content):
                   content = re.sub(
                       r'(<manifest\b[^>]*>)',
                       r'\1\n    <uses-permission android:name="' + permission + '" />',
@@ -73,20 +98,28 @@ jobs:
                   )
 
           if not re.search(r'<application\b', content):
-              raise SystemExit("Erro: elemento application não encontrado.")
+              raise SystemExit("ERROR: Android application element missing.")
 
           manifest.write_text(content, encoding="utf-8")
-          print("Permissões da câmara e do microfone verificadas.")
+          print("Android permissions verified.")
           PY
-       
-      - name: Build APK
+
+      - name: Build Android APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew --no-daemon assembleDebug
 
-      - name: Save ZAMBA APK
+      - name: Verify APK
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          echo "ZAMBA APK successfully generated."
+
+      - name: Upload ZAMBA APK
         uses: actions/upload-artifact@v4
         with:
           name: ZAMBA-Android-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
