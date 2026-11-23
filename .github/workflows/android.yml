@@ -67,8 +67,7 @@ jobs:
           mkdir -p assets
           cp file_000000007ed48208aac7a9cb25df704a.png assets/icon.png
           npm install --no-save @capacitor/assets
-          npx capacitor-assets generate --android
-
+npx capacitor-assets generate --android --splashBackgroundColor '#000000' --splashBackgroundColorDark '#000000' --logoSplashScale 0.16
       - name: Synchronize Android
         run: npx cap sync android
 
